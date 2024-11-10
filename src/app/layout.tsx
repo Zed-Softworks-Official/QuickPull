@@ -21,6 +21,8 @@ import { extractRouterConfig } from 'uploadthing/server'
 
 import { ourFileRouter } from '~/app/api/uploadthing/core'
 import { Toaster } from 'sonner'
+import { ClerkProvider, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
+import { Button } from '~/components/ui/button'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
@@ -34,28 +36,28 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${GeistSans.variable}`} suppressHydrationWarning>
             <body>
-                <NextSSRPlugin
-                    /**
-                     * The `extractRouterConfig` will extract **only** the route configs
-                     * from the router to prevent additional information from being
-                     * leaked to the client. The data passed to the client is the same
-                     * as if you were to fetch `/api/uploadthing` directly.
-                     */
-                    routerConfig={extractRouterConfig(ourFileRouter)}
-                />
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    disableTransitionOnChange
-                >
-                    <TRPCReactProvider>
-                        <main className="container mx-auto w-full">
+                <ClerkProvider dynamic>
+                    <NextSSRPlugin
+                        /**
+                         * The `extractRouterConfig` will extract **only** the route configs
+                         * from the router to prevent additional information from being
+                         * leaked to the client. The data passed to the client is the same
+                         * as if you were to fetch `/api/uploadthing` directly.
+                         */
+                        routerConfig={extractRouterConfig(ourFileRouter)}
+                    />
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="light"
+                        disableTransitionOnChange
+                    >
+                        <TRPCReactProvider>
                             <Navbar />
-                            {children}
-                        </main>
-                        <Toaster richColors />
-                    </TRPCReactProvider>
-                </ThemeProvider>
+                            <main className="container mx-auto w-full">{children}</main>
+                            <Toaster richColors />
+                        </TRPCReactProvider>
+                    </ThemeProvider>
+                </ClerkProvider>
             </body>
         </html>
     )
@@ -63,22 +65,33 @@ export default function RootLayout({
 
 function Navbar() {
     return (
-        <header className="flex items-center justify-between py-5">
-            <Link href="/">
-                <h1 className="font-bold text-3xl">QuickPull</h1>
-            </Link>
-            <NavigationMenu className="flex items-center gap-2">
-                <NavigationMenuList>
-                    <NavigationMenuItem>
-                        <Link href="/upload" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                Upload
-                            </NavigationMenuLink>
-                        </Link>
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-                <ModeToggle />
-            </NavigationMenu>
+        <header className="border-b mb-10">
+            <div className="container mx-auto flex items-center justify-between py-5">
+                <Link href="/">
+                    <h1 className="font-bold text-3xl">QuickPull</h1>
+                </Link>
+                <NavigationMenu className="flex items-center gap-2">
+                    <SignedIn>
+                        <NavigationMenuList>
+                            <NavigationMenuItem>
+                                <Link href="/upload" legacyBehavior passHref>
+                                    <NavigationMenuLink
+                                        className={navigationMenuTriggerStyle()}
+                                    >
+                                        Upload
+                                    </NavigationMenuLink>
+                                </Link>
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                        <ModeToggle />
+                    </SignedIn>
+                    <SignedOut>
+                        <Button asChild variant={'outline'}>
+                            <SignInButton />
+                        </Button>
+                    </SignedOut>
+                </NavigationMenu>
+            </div>
         </header>
     )
 }

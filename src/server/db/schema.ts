@@ -14,6 +14,7 @@ export const createTable = pgTableCreator((name) => `quickpull_${name}`)
 
 export const collections = createTable('collections', {
     id: varchar('id', { length: 256 }).primaryKey(),
+    user_id: varchar('user_id', { length: 256 }).notNull(),
     name: varchar('name', { length: 256 }).notNull(),
     description: varchar('description', { length: 256 }),
     items: jsonb('items').$type<{ url: string; ut_key: string }[]>().notNull(),

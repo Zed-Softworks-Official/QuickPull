@@ -16,22 +16,44 @@ import {
 } from '~/components/ui/navigation-menu'
 import { ModeToggle } from '~/components/mode-toggle'
 
+import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin'
+import { extractRouterConfig } from 'uploadthing/server'
+
+import { ourFileRouter } from '~/app/api/uploadthing/core'
+import { Toaster } from 'sonner'
+
 export const metadata: Metadata = {
     title: 'QuickPull',
     description: 'A tool to quickly download images/videos in bulk',
     icons: [{ rel: 'icon', url: '/favicon.ico' }],
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+    children,
+}: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={`${GeistSans.variable}`} suppressHydrationWarning>
             <body>
-                <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+                <NextSSRPlugin
+                    /**
+                     * The `extractRouterConfig` will extract **only** the route configs
+                     * from the router to prevent additional information from being
+                     * leaked to the client. The data passed to the client is the same
+                     * as if you were to fetch `/api/uploadthing` directly.
+                     */
+                    routerConfig={extractRouterConfig(ourFileRouter)}
+                />
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="light"
+                    disableTransitionOnChange
+                >
                     <TRPCReactProvider>
                         <main className="container mx-auto w-full">
                             <Navbar />
                             {children}
                         </main>
+                        <Toaster richColors />
                     </TRPCReactProvider>
                 </ThemeProvider>
             </body>
@@ -49,7 +71,9 @@ function Navbar() {
                 <NavigationMenuList>
                     <NavigationMenuItem>
                         <Link href="/upload" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Upload</NavigationMenuLink>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                Upload
+                            </NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                 </NavigationMenuList>

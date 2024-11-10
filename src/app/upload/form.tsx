@@ -35,7 +35,7 @@ const schema = z.object({
 
 type SchemaType = z.infer<typeof schema>
 
-export function CollectionForm() {
+export function CollectionForm(props: { account_type: AccountType }) {
     const [files, setFiles] = useState<File[]>([])
     const [progress, setProgress] = useState(0)
     const [pending, setPending] = useState(false)
@@ -48,7 +48,7 @@ export function CollectionForm() {
     })
 
     const { startUpload, isUploading, routeConfig } = useUploadThing(
-        'collectionUploader',
+        props.account_type === 'standard' ? 'standardUploader' : 'premiumUploader',
         {
             onUploadProgress: (progress) => {
                 setProgress(progress)

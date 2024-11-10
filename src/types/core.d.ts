@@ -3,3 +3,5 @@ type CollectionItem = {
     ut_key: string
     filename: string
 }
+
+type AccountType = 'standard' | 'premium'

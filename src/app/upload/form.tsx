@@ -79,6 +79,7 @@ export function CollectionForm() {
         const collectionItems = res.map((item) => ({
             url: item.url,
             ut_key: item.key,
+            filename: item.name,
         }))
 
         await mutation.mutateAsync({

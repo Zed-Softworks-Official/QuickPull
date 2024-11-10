@@ -17,7 +17,7 @@ export const collections = createTable('collections', {
     user_id: varchar('user_id', { length: 256 }).notNull(),
     name: varchar('name', { length: 256 }).notNull(),
     description: varchar('description', { length: 256 }),
-    items: jsonb('items').$type<{ url: string; ut_key: string }[]>().notNull(),
+    items: jsonb('items').$type<CollectionItem[]>().notNull(),
     item_count: integer('item_count').notNull().default(0),
     createdAt: timestamp('created_at', { withTimezone: true })
         .default(sql`CURRENT_TIMESTAMP`)

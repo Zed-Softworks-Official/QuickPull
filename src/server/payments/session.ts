@@ -21,7 +21,10 @@ export async function create_checkout_session(user_id: string) {
         },
         line_items: [
             {
-                price: `price_1QJZRYEtbntcN0k30TjhXRzY`,
+                price:
+                    env.NODE_ENV === 'production'
+                        ? 'price_1QJoVYEtbntcN0k3DEJPDf1Y'
+                        : 'price_1QJZRYEtbntcN0k30TjhXRzY',
                 quantity: 1,
             },
         ],

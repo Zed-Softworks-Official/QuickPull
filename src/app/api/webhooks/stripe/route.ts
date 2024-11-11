@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
         case 'customer.subscription.deleted':
             {
                 const data = event.data.object
-                const customer_id = data.id
+                const customer_id = data.customer as string
 
                 const user = await get_user_by_customer_id_cache(customer_id)
 
@@ -85,6 +85,8 @@ export async function POST(req: NextRequest) {
     }
 
     revalidateTag('users')
+    revalidateTag('portal')
+    revalidateTag('checkout')
 
     return NextResponse.json({ status: 200 })
 }

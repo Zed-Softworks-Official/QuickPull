@@ -95,7 +95,12 @@ async function Navbar() {
                     <SignedIn>
                         <NavigationMenuList className="space-x-5">
                             <NavigationMenuItem>
-                                <Link href="/upload" legacyBehavior passHref>
+                                <Link
+                                    prefetch={true}
+                                    href="/upload"
+                                    legacyBehavior
+                                    passHref
+                                >
                                     <NavigationMenuLink
                                         className={navigationMenuTriggerStyle()}
                                     >
@@ -127,11 +132,7 @@ async function PremiumButton(props: { user: User | null }) {
     const db_user = await get_user_by_id_cache(props.user.id)
     const checkout_session = await api.payments.create_checkout_session()
 
-    if (!checkout_session.url || !db_user) {
-        return null
-    }
-
-    if (db_user.account_type === 'premium') {
+    if (db_user?.account_type === 'premium' || !checkout_session.url) {
         return null
     }
 

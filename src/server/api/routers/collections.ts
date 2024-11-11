@@ -8,6 +8,7 @@ import { db } from '~/server/db'
 import { collections } from '~/server/db/schema'
 
 import { get_collection_by_id_cache, get_collections_cache } from '~/server/db/query'
+import { UTApi } from 'uploadthing/server'
 
 export const collectionsRouter = createTRPCRouter({
     set_collection: protectedProcedure
@@ -63,8 +64,15 @@ export const collectionsRouter = createTRPCRouter({
             if (collection?.user_id !== ctx.user.id) {
                 return false
             }
+            const utapi = new UTApi()
+            const item_keys = collection?.items.map((item) => item.ut_key)
 
-            await db.delete(collections).where(eq(collections.id, input.collection_id))
+            const ut_deletion = utapi.deleteFiles(item_keys)
+            const db_deletion = db
+                .delete(collections)
+                .where(eq(collections.id, input.collection_id))
+
+            await Promise.all([ut_deletion, db_deletion])
             revalidateTag('collections')
 
             return true

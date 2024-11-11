@@ -30,7 +30,11 @@ async function DisplayCollections() {
     return (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {collections.map((collection) => (
-                <Link href={`/collections/${collection.id}`} key={collection.id}>
+                <Link
+                    prefetch={true}
+                    href={`/collections/${collection.id}`}
+                    key={collection.id}
+                >
                     <Card className="overflow-hidden">
                         <CardHeader>
                             <CardTitle>{collection.name}</CardTitle>

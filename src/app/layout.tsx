@@ -66,7 +66,8 @@ export default function RootLayout({
                     />
                     <ThemeProvider
                         attribute="class"
-                        defaultTheme="light"
+                        defaultTheme="system"
+                        enableSystem
                         disableTransitionOnChange
                     >
                         <TRPCReactProvider>
@@ -104,9 +105,6 @@ async function Navbar() {
                             </NavigationMenuItem>
                             <PremiumButton user={user} />
                             <AccountMenu user={user} />
-                            <NavigationMenuItem asChild>
-                                <ModeToggle />
-                            </NavigationMenuItem>
                         </NavigationMenuList>
                     </SignedIn>
                     <SignedOut>
@@ -114,6 +112,9 @@ async function Navbar() {
                             <SignInButton />
                         </Button>
                     </SignedOut>
+                    <NavigationMenuItem asChild>
+                        <ModeToggle />
+                    </NavigationMenuItem>
                 </NavigationMenu>
             </div>
         </header>

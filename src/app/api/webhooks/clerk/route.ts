@@ -6,6 +6,7 @@ import type { WebhookEvent } from '@clerk/nextjs/server'
 import { env } from '~/env'
 import { db } from '~/server/db'
 import { users } from '~/server/db/schema'
+import { revalidateTag } from 'next/cache'
 
 export async function POST(req: NextRequest) {
     const header_payload = await headers()
@@ -54,6 +55,8 @@ export async function POST(req: NextRequest) {
         default:
             console.log('Unhandled event type', type)
     }
+
+    revalidateTag('users')
 
     return NextResponse.json({ message: 'Hello, world!' })
 }

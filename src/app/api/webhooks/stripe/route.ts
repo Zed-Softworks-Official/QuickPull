@@ -7,6 +7,7 @@ import { get_user_by_customer_id_cache } from '~/server/db/query'
 import { db } from '~/server/db'
 import { eq } from 'drizzle-orm'
 import { users } from '~/server/db/schema'
+import { revalidateTag } from 'next/cache'
 
 export async function POST(req: NextRequest) {
     const sig = req.headers.get('stripe-signature')
@@ -19,10 +20,13 @@ export async function POST(req: NextRequest) {
         )
     }
 
+    const payload = await req.text()
+
     let event: Stripe.Event
     try {
-        event = stripe.webhooks.constructEvent(await req.text(), sig, endpoint_secret)
+        event = stripe.webhooks.constructEvent(payload, sig, endpoint_secret)
     } catch (err) {
+        console.error('Webhook Error:', err)
         return NextResponse.json(
             { error: 'Webhook Error: ' + (err as Error).message },
             { status: 400 }
@@ -79,6 +83,8 @@ export async function POST(req: NextRequest) {
         default:
             console.log(`Unhandled event type ${event.type}`)
     }
+
+    revalidateTag('users')
 
     return NextResponse.json({ status: 200 })
 }

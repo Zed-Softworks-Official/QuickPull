@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/only-throw-error */
-import { clerkClient, getAuth } from '@clerk/nextjs/server'
+import { getAuth } from '@clerk/nextjs/server'
 import type { NextRequest } from 'next/server'
 import { createUploadthing, type FileRouter } from 'uploadthing/next'
 import { UploadThingError } from 'uploadthing/server'
+import { get_user_by_id_cache } from '~/server/db/query'
 
 const f = createUploadthing()
 
@@ -13,14 +14,13 @@ const auth_middleware = async (req: NextRequest, account_type: AccountType) => {
         throw new UploadThingError('Unauthorized')
     }
 
-    const clerk_client = await clerkClient()
-    const user_info = await clerk_client.users.getUser(user.userId)
+    const db_user = await get_user_by_id_cache(user.userId)
 
-    if (!user_info) {
+    if (!db_user) {
         throw new UploadThingError('User not found')
     }
 
-    if (user_info.privateMetadata.account_type !== account_type) {
+    if (db_user.account_type !== account_type) {
         throw new UploadThingError('Unauthorized Account Type')
     }
 

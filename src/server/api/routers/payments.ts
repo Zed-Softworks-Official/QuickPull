@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc'
 import { create_checkout_session, create_portal_session } from '~/server/payments'
+import { get_user_by_id_cache } from '~/server/db/query'
 
 const create_checkout_session_cache = unstable_cache(
     async (user_id: string) => {
@@ -26,8 +27,9 @@ export const paymentsRouter = createTRPCRouter({
     }),
 
     create_portal_session: protectedProcedure.query(async ({ ctx }) => {
-        return await create_portal_session_cache(
-            ctx.user.privateMetadata.customer_id as string
-        )
+        const db_user = await get_user_by_id_cache(ctx.user.id)
+        if (!db_user?.customer_id) return { url: null }
+
+        return await create_portal_session_cache(db_user.customer_id)
     }),
 })

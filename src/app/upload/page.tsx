@@ -4,6 +4,7 @@ import { RedirectToSignIn } from '@clerk/nextjs'
 
 import { Separator } from '~/components/ui/separator'
 import { CollectionForm } from './form'
+import { get_user_by_id_cache } from '~/server/db/query'
 
 export default function UploadPage() {
     return (
@@ -24,7 +25,10 @@ async function UploadForm() {
         return <RedirectToSignIn />
     }
 
-    return (
-        <CollectionForm account_type={user.privateMetadata.account_type as AccountType} />
-    )
+    const db_user = await get_user_by_id_cache(user.id)
+    if (!db_user) {
+        return <div>User not found</div>
+    }
+
+    return <CollectionForm account_type={db_user.account_type} />
 }

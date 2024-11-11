@@ -40,6 +40,7 @@ import {
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
 import { api } from '~/trpc/server'
+import { get_user_by_id_cache } from '~/server/db/query'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
@@ -120,13 +121,16 @@ async function Navbar() {
 }
 
 async function PremiumButton(props: { user: User | null }) {
+    if (!props.user) return null
+
+    const db_user = await get_user_by_id_cache(props.user.id)
     const checkout_session = await api.payments.create_checkout_session()
 
-    if (!checkout_session.url) {
+    if (!checkout_session.url || !db_user) {
         return null
     }
 
-    if (props.user?.privateMetadata.account_type === 'premium') {
+    if (db_user.account_type === 'premium') {
         return null
     }
 

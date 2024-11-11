@@ -5,6 +5,34 @@ import { api } from '~/trpc/server'
 import { DownloadButton, DeleteButton } from './action-buttons'
 import { currentUser } from '@clerk/nextjs/server'
 
+export async function generateMetadata(props: {
+    params: Promise<{ collection_id: string }>
+}) {
+    const params = await props.params
+    const collection = await api.collections.get_collection_by_id({
+        collection_id: params.collection_id,
+    })
+
+    if (!collection) {
+        return {}
+    }
+
+    return {
+        title: `QuickPull | ${collection.name}`,
+        description: `Download ${collection.items.length} items from ${collection.name} on QuickPull`,
+        openGraph: {
+            title: `QuickPull | ${collection.name}`,
+            description: `Download ${collection.items.length} items from ${collection.name} on QuickPull`,
+            images: [collection.items[0]?.url],
+        },
+        twitter: {
+            title: `QuickPull | ${collection.name}`,
+            description: `Download ${collection.items.length} items from ${collection.name} on QuickPull`,
+            images: [collection.items[0]?.url],
+        },
+    }
+}
+
 export default async function CollectionPage(props: {
     params: Promise<{ collection_id: string }>
 }) {

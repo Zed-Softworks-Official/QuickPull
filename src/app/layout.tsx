@@ -3,6 +3,7 @@ import '~/styles/globals.css'
 import { GeistSans } from 'geist/font/sans'
 import { type Metadata } from 'next'
 import Link from 'next/link'
+import type { User } from '@clerk/nextjs/server'
 
 import { TRPCReactProvider } from '~/trpc/react'
 import { ThemeProvider } from '~/components/theme-provider'
@@ -31,13 +32,14 @@ import {
 import { Button } from '~/components/ui/button'
 import { currentUser } from '@clerk/nextjs/server'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { User } from 'lucide-react'
+import { UserIcon } from 'lucide-react'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu'
+import { api } from '~/trpc/server'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
@@ -99,29 +101,9 @@ async function Navbar() {
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Avatar>
-                                            <AvatarFallback>
-                                                <User />
-                                            </AvatarFallback>
-                                            <AvatarImage src={user?.imageUrl} />
-                                        </Avatar>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem asChild>
-                                            <Link href={'/account'}>
-                                                Account Settings
-                                            </Link>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem asChild>
-                                            <SignOutButton />
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <PremiumButton user={user} />
+                            <AccountMenu user={user} />
+                            <NavigationMenuItem asChild>
                                 <ModeToggle />
                             </NavigationMenuItem>
                         </NavigationMenuList>
@@ -134,5 +116,61 @@ async function Navbar() {
                 </NavigationMenu>
             </div>
         </header>
+    )
+}
+
+async function PremiumButton(props: { user: User | null }) {
+    const checkout_session = await api.payments.create_checkout_session()
+
+    if (!checkout_session.url) {
+        return null
+    }
+
+    if (props.user?.privateMetadata.account_type === 'premium') {
+        return null
+    }
+
+    return (
+        <NavigationMenuItem>
+            <Link href={checkout_session.url} legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Go Premium
+                </NavigationMenuLink>
+            </Link>
+        </NavigationMenuItem>
+    )
+}
+
+async function AccountMenu(props: { user: User | null }) {
+    const portal_session = await api.payments.create_portal_session()
+
+    if (!portal_session.url) {
+        return null
+    }
+
+    return (
+        <NavigationMenuItem>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Avatar>
+                        <AvatarFallback>
+                            <UserIcon />
+                        </AvatarFallback>
+                        <AvatarImage src={props.user?.imageUrl} />
+                    </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                        <Link href={portal_session.url}>Manage Subscription</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={'/account'}>Account Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <SignOutButton />
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </NavigationMenuItem>
     )
 }

@@ -101,6 +101,9 @@ importers:
       sonner:
         specifier: ^1.7.0
         version: 1.7.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      stripe:
+        specifier: ^17.3.1
+        version: 17.3.1
       superjson:
         specifier: ^2.2.1
         version: 2.2.1
@@ -2550,6 +2553,10 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
+  qs@6.13.0:
+    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+    engines: {node: '>=0.6'}
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -2788,6 +2795,10 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  stripe@17.3.1:
+    resolution: {integrity: sha512-E9/u+GFBPkYnTmfFCoKX3+gP4R3SkZoGunHe4cw9J+sqkj5uxpLFf1LscuI9BuEyIQ0PFAgPTHavgQwRtOvnag==}
+    engines: {node: '>=12.*'}
 
   styled-jsx@5.1.6:
     resolution: {integrity: sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==}
@@ -5267,6 +5278,10 @@ snapshots:
 
   pure-rand@6.1.0: {}
 
+  qs@6.13.0:
+    dependencies:
+      side-channel: 1.0.6
+
   queue-microtask@1.2.3: {}
 
   react-dom@18.3.1(react@18.3.1):
@@ -5567,6 +5582,11 @@ snapshots:
   strip-bom@3.0.0: {}
 
   strip-json-comments@3.1.1: {}
+
+  stripe@17.3.1:
+    dependencies:
+      '@types/node': 20.17.6
+      qs: 6.13.0
 
   styled-jsx@5.1.6(react@18.3.1):
     dependencies:

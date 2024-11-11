@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { createId } from '@paralleldrive/cuid2'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { eq } from 'drizzle-orm'
 
 import { protectedProcedure, createTRPCRouter, publicProcedure } from '~/server/api/trpc'
@@ -40,6 +40,7 @@ export const collectionsRouter = createTRPCRouter({
             }
 
             revalidateTag('collections')
+            revalidatePath('/')
         }),
 
     get_collections: protectedProcedure.query(async ({ ctx }) => {
@@ -73,7 +74,9 @@ export const collectionsRouter = createTRPCRouter({
                 .where(eq(collections.id, input.collection_id))
 
             await Promise.all([ut_deletion, db_deletion])
+
             revalidateTag('collections')
+            revalidatePath('/')
 
             return true
         }),

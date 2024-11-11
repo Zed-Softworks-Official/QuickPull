@@ -3,6 +3,7 @@ import { getAuth } from '@clerk/nextjs/server'
 import type { NextRequest } from 'next/server'
 import { createUploadthing, type FileRouter } from 'uploadthing/next'
 import { UploadThingError } from 'uploadthing/server'
+
 import { get_user_by_id_cache } from '~/server/db/query'
 
 const f = createUploadthing()
@@ -11,16 +12,19 @@ const auth_middleware = async (req: NextRequest, account_type: AccountType) => {
     const user = getAuth(req)
 
     if (!user?.userId) {
+        console.log('No User ID found in uploadthing middleware')
         throw new UploadThingError('Unauthorized')
     }
 
     const db_user = await get_user_by_id_cache(user.userId)
 
     if (!db_user) {
+        console.log('User does not exist')
         throw new UploadThingError('User not found')
     }
 
-    if (db_user.account_type !== account_type) {
+    if ((db_user.account_type as AccountType) !== account_type) {
+        console.log('Unauthorized Account Type')
         throw new UploadThingError('Unauthorized Account Type')
     }
 

@@ -95,12 +95,7 @@ async function Navbar() {
                     <SignedIn>
                         <NavigationMenuList className="space-x-5">
                             <NavigationMenuItem>
-                                <Link
-                                    prefetch={true}
-                                    href="/upload"
-                                    legacyBehavior
-                                    passHref
-                                >
+                                <Link href="/upload" legacyBehavior passHref>
                                     <NavigationMenuLink
                                         className={navigationMenuTriggerStyle()}
                                     >

@@ -83,14 +83,24 @@ export function DownloadButton(props: {
 export function DeleteButton(props: {
     collection: InferSelectModel<typeof collections>
 }) {
+    const [toastId, setToastId] = useState<string | number | null>(null)
     const router = useRouter()
     const mutation = api.collections.delete_collection.useMutation({
+        onMutate: () => {
+            setToastId(toast.loading('Deleting collection...'))
+        },
         onSuccess: (res) => {
+            if (!toastId) return
+
             if (res) {
-                toast.success('Collection deleted!')
+                toast.success('Collection deleted!', {
+                    id: toastId,
+                })
                 router.push('/')
             } else {
-                toast.error('Failed to delete collection!')
+                toast.error('Failed to delete collection!', {
+                    id: toastId,
+                })
             }
         },
     })

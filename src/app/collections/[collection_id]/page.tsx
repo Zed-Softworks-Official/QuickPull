@@ -3,10 +3,13 @@ import Image from 'next/image'
 
 import { api } from '~/trpc/server'
 import { DownloadButton, DeleteButton } from './action-buttons'
+import { currentUser } from '@clerk/nextjs/server'
 
 export default async function CollectionPage(props: {
     params: Promise<{ collection_id: string }>
 }) {
+    const user = await currentUser()
+
     const params = await props.params
     const collection = await api.collections.get_collection_by_id({
         collection_id: params.collection_id,
@@ -27,7 +30,9 @@ export default async function CollectionPage(props: {
                 </div>
                 <div className="flex items-center gap-5 justify-end">
                     <DownloadButton collection={collection} />
-                    <DeleteButton collection={collection} />
+                    {user?.id === collection.user_id && (
+                        <DeleteButton collection={collection} />
+                    )}
                 </div>
             </div>
             <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">

@@ -8,7 +8,7 @@ import { get_user_by_id_cache } from '~/server/db/query'
 
 export default function UploadPage() {
     return (
-        <div className="flex flex-col gap-5 w-full max-w-xl mx-auto">
+        <div className="flex flex-col gap-5 w-full max-w-xl mx-auto container">
             <h1 className="text-2xl font-bold">Upload</h1>
             <Separator />
             <Suspense fallback={<div>Loading...</div>}>

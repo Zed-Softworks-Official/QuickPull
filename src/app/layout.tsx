@@ -43,7 +43,7 @@ import { get_user_by_id_cache } from '~/server/db/query'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
-    description: 'A tool to quickly download images/videos in bulk',
+    description: 'A tool to quickly download images in bulk',
     icons: [{ rel: 'icon', url: '/favicon.ico' }],
 }
 
@@ -73,21 +73,23 @@ export default function RootLayout({
                             <Navbar />
                             <main className="flex flex-col min-h-screen">{children}</main>
                             <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    &copy; {new Date().getFullYear()}{' '}
-                                    <Link href="https://zedsoftworks.dev">
-                                        Zed Softworks LLC
-                                    </Link>
-                                    . All rights reserved.
-                                </p>
-                                <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-                                    <Button variant={'link'} asChild>
-                                        <Link href={'/terms'}>Terms of Service</Link>
-                                    </Button>
-                                    <Button variant={'link'} asChild>
-                                        <Link href={'/privacy'}>Privacy</Link>
-                                    </Button>
-                                </nav>
+                                <div className="container mx-auto w-full flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        &copy; {new Date().getFullYear()}{' '}
+                                        <Link href="https://zedsoftworks.dev">
+                                            Zed Softworks LLC
+                                        </Link>
+                                        . All rights reserved.
+                                    </p>
+                                    <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+                                        <Button variant={'link'} asChild>
+                                            <Link href={'/terms'}>Terms of Service</Link>
+                                        </Button>
+                                        <Button variant={'link'} asChild>
+                                            <Link href={'/privacy'}>Privacy</Link>
+                                        </Button>
+                                    </nav>
+                                </div>
                             </footer>
                             <Toaster richColors />
                         </TRPCReactProvider>
@@ -102,7 +104,7 @@ async function Navbar() {
     const user = await currentUser()
 
     return (
-        <header className="border-b mb-10">
+        <header className="border-b mb-10 sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
             <div className="container mx-auto flex items-center justify-between py-5">
                 <Link href="/" className="flex flex-row gap-2 items-center">
                     <Zap className="w-6 h-6 text-blue-600" />
@@ -180,7 +182,9 @@ function AccountMenu(props: { user: User | null }) {
                         <Link href={'/account'}>Account Settings</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <SignOutButton />
+                        <Button asChild>
+                            <SignOutButton />
+                        </Button>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

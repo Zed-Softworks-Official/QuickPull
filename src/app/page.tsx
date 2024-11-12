@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from '~/components/ui/card'
 import { api, HydrateClient } from '~/trpc/server'
-import { Download, ImageIcon } from 'lucide-react'
+import { Download, ImageIcon, Plus } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 
 export default function Home() {
@@ -28,6 +28,22 @@ export default function Home() {
 
 async function DisplayCollections() {
     const collections = await api.collections.get_collections()
+
+    if (collections.length === 0) {
+        return (
+            <div className="container mx-auto flex flex-col gap-5 items-center justify-center w-full ">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl text-center">
+                    No collections found
+                </h1>
+                <Button asChild>
+                    <Link href="/upload">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Create a collection
+                    </Link>
+                </Button>
+            </div>
+        )
+    }
 
     return (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 container mx-auto">

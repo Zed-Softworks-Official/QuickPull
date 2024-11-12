@@ -30,7 +30,7 @@ async function DisplayCollections() {
     const collections = await api.collections.get_collections()
 
     return (
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 container mx-auto">
             {collections.map((collection) => (
                 <Link
                     prefetch={true}

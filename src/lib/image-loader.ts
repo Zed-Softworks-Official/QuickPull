@@ -1,8 +1,6 @@
-const normalizeSrc = (src: string) => {
-    return src.startsWith('/') ? src.slice(1) : src
-}
+import { env } from '~/env'
 
-export default function cloudflareLoader({
+export default function imageKitLoader({
     src,
     width,
     quality,
@@ -11,13 +9,6 @@ export default function cloudflareLoader({
     width: number
     quality?: number
 }) {
-    if (process.env.NODE_ENV === 'development') {
-        return src
-    }
-    const params = [`width=${width}`]
-    if (quality) {
-        params.push(`quality=${quality}`)
-    }
-    const paramsString = params.join(',')
-    return `/cdn-cgi/image/${paramsString}/${normalizeSrc(src)}`
+    const params = [`w-${width}`, `q-${quality ?? 80}`]
+    return `https://ik.imagekit.io/${env.NEXT_PUBLIC_IMAGEKIT_ID}/${src}?tr=${params.join(',')}`
 }

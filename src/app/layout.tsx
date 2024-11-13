@@ -181,10 +181,8 @@ function AccountMenu(props: { user: User | null }) {
                     <DropdownMenuItem asChild>
                         <Link href={'/account'}>Account Settings</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Button asChild>
-                            <SignOutButton />
-                        </Button>
+                    <DropdownMenuItem asChild className="w-full">
+                        <SignOutButton />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

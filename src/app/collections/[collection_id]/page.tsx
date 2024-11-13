@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 
 import { api } from '~/trpc/server'
-import { DownloadButton, DeleteButton } from './action-buttons'
+import { DownloadButton, KebabMenu } from './action-buttons'
 import { currentUser } from '@clerk/nextjs/server'
 
 export async function generateMetadata(props: {
@@ -59,7 +59,7 @@ export default async function CollectionPage(props: {
                 <div className="flex items-center gap-5 justify-end">
                     <DownloadButton collection={collection} />
                     {user?.id === collection.user_id && (
-                        <DeleteButton collection={collection} />
+                        <KebabMenu collection={collection} />
                     )}
                 </div>
             </div>

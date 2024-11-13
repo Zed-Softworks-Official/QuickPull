@@ -147,7 +147,7 @@ function DisplayLanding() {
                             </CardHeader>
                             <CardContent>
                                 <ul className="list-disc list-inside space-y-2">
-                                    <li>5 images per collection</li>
+                                    <li>10 images per collection</li>
                                     <li>4mb max file size</li>
                                 </ul>
                                 <Button asChild className="w-full mt-6">
@@ -161,8 +161,8 @@ function DisplayLanding() {
                             </CardHeader>
                             <CardContent>
                                 <ul className="list-disc list-inside space-y-2">
-                                    <li>10 images per collection</li>
-                                    <li>10mb max file size</li>
+                                    <li>20 images per collection</li>
+                                    <li>8mb max file size</li>
                                 </ul>
                                 <p className="mt-4 text-2xl font-bold">$10/month</p>
                                 <Button asChild className="w-full mt-6">

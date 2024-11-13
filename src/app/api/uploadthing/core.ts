@@ -34,7 +34,7 @@ const auth_middleware = async (req: NextRequest, account_type: AccountType) => {
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
     // Define as many FileRoutes as you like, each with a unique routeSlug
-    standardUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 5 } })
+    standardUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 10 } })
         // Set permissions and file types for this FileRoute
         .middleware(({ req }) => auth_middleware(req, 'standard'))
         .onUploadComplete(async ({ metadata, file }) => {
@@ -46,7 +46,7 @@ export const ourFileRouter = {
             // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
             return { uploadedBy: metadata.userId }
         }),
-    premiumUploader: f({ image: { maxFileSize: '8MB', maxFileCount: 10 } })
+    premiumUploader: f({ image: { maxFileSize: '8MB', maxFileCount: 20 } })
         .middleware(({ req }) => auth_middleware(req, 'premium'))
         .onUploadComplete(({ metadata, file }) => {
             console.log('Upload complete for userId:', metadata.userId)

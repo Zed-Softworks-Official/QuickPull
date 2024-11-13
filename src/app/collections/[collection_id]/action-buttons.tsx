@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import type { InferSelectModel } from 'drizzle-orm'
-import { Download, Trash2 } from 'lucide-react'
+import { Download, MoreVertical, Share, Trash2 } from 'lucide-react'
 import JSZip from 'jszip'
 import { toast } from 'sonner'
 import { useState } from 'react'
@@ -21,6 +21,13 @@ import {
     AlertDialogTrigger,
 } from '~/components/ui/alert-dialog'
 import { api } from '~/trpc/react'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
+import { env } from '~/env'
 
 export function DownloadButton(props: {
     collection: InferSelectModel<typeof collections>
@@ -80,9 +87,7 @@ export function DownloadButton(props: {
     )
 }
 
-export function DeleteButton(props: {
-    collection: InferSelectModel<typeof collections>
-}) {
+export function KebabMenu(props: { collection: InferSelectModel<typeof collections> }) {
     const [toastId, setToastId] = useState<string | number | null>(null)
     const router = useRouter()
     const mutation = api.collections.delete_collection.useMutation({
@@ -107,12 +112,36 @@ export function DeleteButton(props: {
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger asChild>
-                <Button variant={'destructive'}>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                </Button>
-            </AlertDialogTrigger>
+            <DropdownMenu>
+                <DropdownMenuTrigger>
+                    <MoreVertical className="w-4 h-4 text-foreground" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem
+                        asChild
+                        onClick={async () => {
+                            await navigator.clipboard.writeText(
+                                `${env.NEXT_PUBLIC_URL}/collections/${props.collection.id}`
+                            )
+
+                            toast.info('Copied to clipboard!')
+                        }}
+                    >
+                        <div className="flex items-center gap-2">
+                            <Share className="w-4 h-4 mr-2" />
+                            Share
+                        </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <AlertDialogTrigger asChild>
+                            <div className="flex items-center gap-2">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                            </div>
+                        </AlertDialogTrigger>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>

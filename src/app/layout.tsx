@@ -22,13 +22,7 @@ import { extractRouterConfig } from 'uploadthing/server'
 
 import { ourFileRouter } from '~/app/api/uploadthing/core'
 import { Toaster } from '~/components/ui/sonner'
-import {
-    ClerkProvider,
-    SignedIn,
-    SignedOut,
-    SignInButton,
-    SignOutButton,
-} from '@clerk/nextjs'
+import { ClerkProvider, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs'
 import { Button } from '~/components/ui/button'
 import { currentUser } from '@clerk/nextjs/server'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
@@ -41,6 +35,7 @@ import {
 } from '~/components/ui/dropdown-menu'
 import { get_user_by_id_cache } from '~/server/db/query'
 import { PosthogProvider } from '~/components/posthog-provider'
+import { env } from '~/env'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
@@ -54,7 +49,10 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${GeistSans.variable}`} suppressHydrationWarning>
             <body>
-                <ClerkProvider dynamic>
+                <ClerkProvider
+                    publishableKey={env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+                    dynamic
+                >
                     <PosthogProvider>
                         <NextSSRPlugin
                             /**
@@ -77,7 +75,7 @@ export default function RootLayout({
                                     {children}
                                 </main>
                                 <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-                                    <div className="container mx-auto w-full flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
+                                    <div className="container mx-auto w-full flex flex-col sm:flex-row gap-2 sm:items-center justify-center sm:justify-between">
                                         <p className="text-xs text-gray-500 dark:text-gray-400">
                                             &copy; {new Date().getFullYear()}{' '}
                                             <Link href="https://zedsoftworks.dev">
@@ -137,7 +135,9 @@ async function Navbar() {
                     </SignedIn>
                     <SignedOut>
                         <Button asChild variant={'outline'}>
-                            <SignInButton />
+                            <Link prefetch={true} href={'/u/login'}>
+                                Login
+                            </Link>
                         </Button>
                     </SignedOut>
                     <NavigationMenuItem asChild>
@@ -186,7 +186,7 @@ function AccountMenu(props: { user: User | null }) {
                         <Link href={'/api/payments/portal'}>Manage Subscription</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href={'/account'}>Account Settings</Link>
+                        <Link href={'/u/account'}>Account Settings</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="w-full">
                         <SignOutButton />

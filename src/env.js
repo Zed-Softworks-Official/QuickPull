@@ -24,6 +24,7 @@ export const env = createEnv({
         NEXT_PUBLIC_IMAGEKIT_ID: z.string(),
         NEXT_PUBLIC_POSTHOG_KEY: z.string(),
         NEXT_PUBLIC_POSTHOG_HOST: z.string(),
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
     },
 
     /**
@@ -40,6 +41,7 @@ export const env = createEnv({
         NEXT_PUBLIC_IMAGEKIT_ID: process.env.NEXT_PUBLIC_IMAGEKIT_ID,
         NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
         NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     },
     /**
      * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

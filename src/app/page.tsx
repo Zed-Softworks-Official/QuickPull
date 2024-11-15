@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 import {
     Card,
@@ -93,7 +93,7 @@ function DisplayLanding() {
                         </div>
                         <div className="space-x-4">
                             <Button asChild>
-                                <SignInButton>Get Started</SignInButton>
+                                <Link href="/u/login">Get Started</Link>
                             </Button>
                         </div>
                     </div>
@@ -151,7 +151,7 @@ function DisplayLanding() {
                                     <li>4mb max file size</li>
                                 </ul>
                                 <Button asChild className="w-full mt-6">
-                                    <SignInButton>Get Started</SignInButton>
+                                    <Link href="/u/login">Get Started</Link>
                                 </Button>
                             </CardContent>
                         </Card>
@@ -166,7 +166,7 @@ function DisplayLanding() {
                                 </ul>
                                 <p className="mt-4 text-2xl font-bold">$10/month</p>
                                 <Button asChild className="w-full mt-6">
-                                    <SignInButton>Get Started</SignInButton>
+                                    <Link href="/u/login">Get Started</Link>
                                 </Button>
                             </CardContent>
                         </Card>
@@ -189,7 +189,7 @@ function DisplayLanding() {
                             </p>
                         </div>
                         <Button asChild>
-                            <SignInButton>Get Started Now</SignInButton>
+                            <Link href="/u/login">Get Started Now</Link>
                         </Button>
                     </div>
                 </div>

@@ -51,24 +51,44 @@ export default function RootLayout({
             <body>
                 <ClerkProvider
                     publishableKey={env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+                    appearance={{
+                        elements: {
+                            rootBox: 'rounded-lg border bg-card text-card-foreground',
+                            card: 'rounded-lg border bg-card text-card-foreground',
+                            headerTitle: 'text-foreground',
+                            headerSubtitle: 'text-muted-foreground',
+                            button: 'bg-primary text-primary-foreground hover:bg-primary/80',
+                            formFieldInput: 'border rounded-md',
+                            formFieldLabel: 'text-foreground',
+                            dividerLine: 'bg-foreground/[0.1]',
+                            footer: '!bg-card !rounded-md !text-card-foreground [&>*]:!bg-card [&>*]:!text-card-foreground bg-transparent',
+                            footerActionText:
+                                '!text-muted-foreground [&>*]:!text-muted-foreground',
+                            footerActionLink:
+                                '!text-muted-foreground hover:!text-foreground [&>*]:!text-muted-foreground hover:[&>*]:!text-foreground',
+                            footerActionButton:
+                                '!text-muted-foreground hover:!text-foreground [&>*]:!text-muted-foreground hover:[&>*]:!text-foreground',
+                        },
+                    }}
                     dynamic
                 >
-                    <PosthogProvider>
-                        <NextSSRPlugin
-                            /**
-                             * The `extractRouterConfig` will extract **only** the route configs
-                             * from the router to prevent additional information from being
-                             * leaked to the client. The data passed to the client is the same
-                             * as if you were to fetch `/api/uploadthing` directly.
-                             */
-                            routerConfig={extractRouterConfig(ourFileRouter)}
-                        />
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                            disableTransitionOnChange
-                        >
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <PosthogProvider>
+                            <NextSSRPlugin
+                                /**
+                                 * The `extractRouterConfig` will extract **only** the route configs
+                                 * from the router to prevent additional information from being
+                                 * leaked to the client. The data passed to the client is the same
+                                 * as if you were to fetch `/api/uploadthing` directly.
+                                 */
+                                routerConfig={extractRouterConfig(ourFileRouter)}
+                            />
+
                             <TRPCReactProvider>
                                 <Navbar />
                                 <main className="flex flex-col min-h-screen">
@@ -97,8 +117,8 @@ export default function RootLayout({
                                 </footer>
                                 <Toaster richColors />
                             </TRPCReactProvider>
-                        </ThemeProvider>
-                    </PosthogProvider>
+                        </PosthogProvider>
+                    </ThemeProvider>
                 </ClerkProvider>
             </body>
         </html>

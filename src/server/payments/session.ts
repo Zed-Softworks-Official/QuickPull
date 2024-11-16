@@ -15,6 +15,7 @@ export async function create_checkout_session(user_id: string) {
 
     return await stripe.checkout.sessions.create({
         success_url: `${env.NEXT_PUBLIC_URL}/payments/success`,
+        cancel_url: `${env.NEXT_PUBLIC_URL}`,
         customer: customer_id,
         metadata: {
             user_id,

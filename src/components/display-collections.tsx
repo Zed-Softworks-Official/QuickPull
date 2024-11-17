@@ -1,9 +1,9 @@
 'use client'
 
-import { api } from '~/trpc/react'
-import { Button } from '~/components/ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Plus } from 'lucide-react'
+
 import {
     Card,
     CardContent,
@@ -11,8 +11,10 @@ import {
     CardTitle,
     CardDescription,
 } from '~/components/ui/card'
-import Image from 'next/image'
-import { Skeleton } from './ui/skeleton'
+import { Button } from '~/components/ui/button'
+import { Skeleton } from '~/components/ui/skeleton'
+
+import { api } from '~/trpc/react'
 
 export function DisplayCollections() {
     const { data, isLoading } = api.collections.get_collection.useQuery()

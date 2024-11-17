@@ -9,9 +9,9 @@ import { Input } from '~/components/ui/input'
 import { Button } from '~/components/ui/button'
 import { Textarea } from '~/components/ui/textarea'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, type Dispatch, type SetStateAction } from 'react'
 
-import { CloudUpload } from 'lucide-react'
+import { CloudUpload, MoreVertical, Trash2 } from 'lucide-react'
 
 import { useDropzone } from '@uploadthing/react'
 import {
@@ -27,6 +27,14 @@ import { Progress } from '~/components/ui/progress'
 import { toast } from 'sonner'
 import { api } from '~/trpc/react'
 import { useRouter } from 'next/navigation'
+import { type ColumnDef } from '@tanstack/react-table'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
+import { DataTable } from '~/components/data-table'
 
 const schema = z.object({
     name: z.string().min(1, { message: 'Name is required' }),
@@ -41,8 +49,11 @@ export function CollectionForm(props: { account_type: AccountType }) {
     const [pending, setPending] = useState(false)
 
     const router = useRouter()
-    const mutation = api.collections.set_collection.useMutation({
-        onSuccess: () => {
+    const utils = api.useUtils()
+    const createCollection = api.collections.set_collection.useMutation({
+        onSuccess: async () => {
+            await utils.collections.get_collection.invalidate()
+
             router.replace('/')
         },
     })
@@ -82,7 +93,7 @@ export function CollectionForm(props: { account_type: AccountType }) {
             filename: item.name,
         }))
 
-        await mutation.mutateAsync({
+        await createCollection.mutateAsync({
             name: data.name,
             description: data.description,
             items: collectionItems,
@@ -94,7 +105,7 @@ export function CollectionForm(props: { account_type: AccountType }) {
     return (
         <Form {...form}>
             <form
-                className="w-full flex flex-col gap-5"
+                className="w-full flex flex-col gap-5 pb-5"
                 onSubmit={form.handleSubmit(handle_submit)}
             >
                 <FormField
@@ -135,6 +146,7 @@ export function CollectionForm(props: { account_type: AccountType }) {
                         files={files}
                         setFiles={setFiles}
                     />
+                    <FileList files={files} setFiles={setFiles} />
                 </FormItem>
                 <Button type="submit" disabled={pending}>
                     Create Collection
@@ -144,16 +156,16 @@ export function CollectionForm(props: { account_type: AccountType }) {
     )
 }
 
-export function UploadDropzone(props: {
+function UploadDropzone(props: {
     isUploading: boolean
     routeConfig: ExpandedRouteConfig | undefined
     progress: number
     files: File[]
-    setFiles: (files: File[]) => void
+    setFiles: Dispatch<SetStateAction<File[]>>
 }) {
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
-            props.setFiles(acceptedFiles)
+            props.setFiles((prev) => [...prev, ...acceptedFiles])
         },
         [props]
     )
@@ -184,6 +196,14 @@ export function UploadDropzone(props: {
                 )}
                 {props.files.length !== 0 && (
                     <div className="flex flex-col items-center justify-center gap-3">
+                        <CloudUpload className="w-10 h-10" />
+                        <CardTitle className="text-xl">Upload Files</CardTitle>
+                        <CardDescription>
+                            {generatePermittedFileTypes(props.routeConfig).fileTypes.join(
+                                ', '
+                            )}{' '}
+                            (max {props.routeConfig?.image?.maxFileSize})
+                        </CardDescription>
                         <CardDescription>
                             {props.files.length} files selected
                         </CardDescription>
@@ -192,4 +212,56 @@ export function UploadDropzone(props: {
             </CardHeader>
         </Card>
     )
+}
+
+function FileList(props: { files: File[]; setFiles: Dispatch<SetStateAction<File[]>> }) {
+    if (props.files.length === 0) return null
+
+    const columns: ColumnDef<File>[] = [
+        {
+            header: 'Filename',
+            accessorKey: 'name',
+        },
+        {
+            header: 'Size',
+            accessorKey: 'size',
+            cell: ({ row }) => {
+                const bytes = row.original.size
+                if (bytes < 1024 * 1024) {
+                    return `${(bytes / 1024).toFixed(1)} KB`
+                }
+                return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+            },
+        },
+        {
+            id: 'actions',
+            cell: ({ row }) => {
+                const index = row.index
+
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant={'ghost'}>
+                                <MoreVertical className="w-4 h-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem
+                                onClick={() =>
+                                    props.setFiles((prev) =>
+                                        prev.filter((_, i) => i !== index)
+                                    )
+                                }
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Remove
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )
+            },
+        },
+    ]
+
+    return <DataTable columns={columns} data={props.files} />
 }

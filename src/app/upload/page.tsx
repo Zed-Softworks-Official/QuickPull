@@ -10,7 +10,7 @@ import { Skeleton } from '~/components/ui/skeleton'
 
 export default function UploadPage() {
     return (
-        <div className="flex flex-col gap-5 w-full max-w-xl mx-auto container">
+        <div className="flex flex-col gap-5 w-full max-w-xl mx-auto container px-5">
             <h1 className="text-2xl font-bold">Upload</h1>
             <Separator />
             <Suspense fallback={<UploadFormSkeleton />}>

@@ -9,7 +9,7 @@ import { Input } from '~/components/ui/input'
 import { Button } from '~/components/ui/button'
 import { Textarea } from '~/components/ui/textarea'
 
-import { useState, useCallback, type Dispatch, type SetStateAction } from 'react'
+import { useState, useCallback, type Dispatch, type SetStateAction, useRef } from 'react'
 
 import { CloudUpload, MoreVertical, Trash2 } from 'lucide-react'
 
@@ -48,10 +48,16 @@ export function CollectionForm(props: { account_type: AccountType }) {
     const [progress, setProgress] = useState(0)
     const [pending, setPending] = useState(false)
 
+    const toastId = useRef<string | number>('')
+
     const router = useRouter()
     const utils = api.useUtils()
     const createCollection = api.collections.set_collection.useMutation({
         onSuccess: async () => {
+            toast.success('Files uploaded successfully', {
+                id: toastId.current,
+            })
+
             await utils.collections.get_collection.invalidate()
 
             router.replace('/')
@@ -63,6 +69,13 @@ export function CollectionForm(props: { account_type: AccountType }) {
         {
             onUploadProgress: (progress) => {
                 setProgress(progress)
+            },
+            onUploadError: (error) => {
+                toast.error(error.message, {
+                    id: toastId.current,
+                })
+
+                setPending(false)
             },
         }
     )
@@ -78,12 +91,12 @@ export function CollectionForm(props: { account_type: AccountType }) {
 
     const handle_submit = async (data: SchemaType) => {
         setPending(true)
-        const toastId = toast.loading('Uploading Files')
+        toastId.current = toast.loading('Uploading Files')
 
         const res = await startUpload(files)
         if (!res) {
-            toast.error('Failed to upload files', { id: toastId })
             setPending(false)
+
             return
         }
 
@@ -93,13 +106,11 @@ export function CollectionForm(props: { account_type: AccountType }) {
             filename: item.name,
         }))
 
-        await createCollection.mutateAsync({
+        createCollection.mutate({
             name: data.name,
             description: data.description,
             items: collectionItems,
         })
-
-        toast.success('Files uploaded successfully', { id: toastId })
     }
 
     return (
@@ -165,6 +176,14 @@ function UploadDropzone(props: {
 }) {
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
+            if (
+                acceptedFiles.length + props.files.length >
+                (props.routeConfig?.image?.maxFileCount ?? 0)
+            ) {
+                toast.error(`Max file count is ${props.routeConfig?.image?.maxFileCount}`)
+                return
+            }
+
             props.setFiles((prev) => [...prev, ...acceptedFiles])
         },
         [props]

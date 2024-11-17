@@ -5,12 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Download, ImageIcon } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { DisplayCollections } from '~/components/display-collections'
+import { HydrateClient } from '~/trpc/server'
 
 export default function Home() {
     return (
         <>
             <SignedIn>
-                <DisplayCollections />
+                <HydrateClient>
+                    <DisplayCollections />
+                </HydrateClient>
             </SignedIn>
             <SignedOut>
                 <DisplayLanding />

@@ -38,8 +38,6 @@ export const collectionsRouter = createTRPCRouter({
         }),
 
     get_collection: protectedProcedure.query(async ({ ctx }) => {
-        console.log('Fetching collections')
-
         return await ctx.db.query.collections.findMany({
             where: eq(collections.user_id, ctx.user.id),
         })

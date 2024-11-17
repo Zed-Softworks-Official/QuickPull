@@ -89,18 +89,23 @@ export function DownloadButton(props: {
 
 export function KebabMenu(props: { collection: InferSelectModel<typeof collections> }) {
     const [toastId, setToastId] = useState<string | number | null>(null)
+
     const router = useRouter()
-    const mutation = api.collections.delete_collection.useMutation({
+    const utils = api.useUtils()
+
+    const deleteCollection = api.collections.delete_collection.useMutation({
         onMutate: () => {
             setToastId(toast.loading('Deleting collection...'))
         },
-        onSuccess: (res) => {
+        onSuccess: async (res) => {
             if (!toastId) return
 
             if (res) {
                 toast.success('Collection deleted!', {
                     id: toastId,
                 })
+
+                await utils.collections.get_collection.invalidate()
                 router.replace('/')
             } else {
                 toast.error('Failed to delete collection!', {
@@ -152,13 +157,15 @@ export function KebabMenu(props: { collection: InferSelectModel<typeof collectio
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        disabled={mutation.isPending}
+                        disabled={deleteCollection.isPending}
                         onClick={() => {
-                            mutation.mutate({ collection_id: props.collection.id })
+                            deleteCollection.mutate({
+                                collection_id: props.collection.id,
+                            })
                         }}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                        {mutation.isPending ? 'Deleting...' : 'Delete'}
+                        {deleteCollection.isPending ? 'Deleting...' : 'Delete'}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

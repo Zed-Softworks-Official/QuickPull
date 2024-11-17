@@ -3,10 +3,18 @@ import { getAuth } from '@clerk/nextjs/server'
 import type { NextRequest } from 'next/server'
 import { createUploadthing, type FileRouter } from 'uploadthing/next'
 import { UploadThingError } from 'uploadthing/server'
+import { z } from 'zod'
 
 import { get_user_by_id_cache } from '~/server/db/query'
 
-const f = createUploadthing()
+const f = createUploadthing({
+    errorFormatter: (err) => {
+        return {
+            message: err.message,
+            zodError: err.cause instanceof z.ZodError ? err.cause.flatten() : null,
+        }
+    },
+})
 
 const auth_middleware = async (req: NextRequest, account_type: AccountType) => {
     const user = getAuth(req)

@@ -175,6 +175,7 @@ function UploadDropzone(props: {
         accept: generateClientDropzoneAccept(
             generatePermittedFileTypes(props.routeConfig).fileTypes
         ),
+        maxFiles: props.routeConfig?.image?.maxFileCount,
     })
 
     return (

@@ -26,7 +26,7 @@ import { ClerkProvider, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs
 import { Button } from '~/components/ui/button'
 import { currentUser } from '@clerk/nextjs/server'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { UserIcon, Zap } from 'lucide-react'
+import { Menu, UserIcon, Zap } from 'lucide-react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,6 +36,7 @@ import {
 import { get_user_by_id_cache } from '~/server/db/query'
 import { PosthogProvider } from '~/components/posthog-provider'
 import { env } from '~/env'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '~/components/ui/sheet'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
@@ -95,15 +96,15 @@ export default function RootLayout({
                                     {children}
                                 </main>
                                 <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-                                    <div className="container mx-auto w-full flex flex-col sm:flex-row gap-2 sm:items-center justify-center sm:justify-between">
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    <div className="container mx-auto w-full flex flex-col sm:flex-row gap-2 items-center justify-center sm:justify-between">
+                                        <p className="text-xs text-center sm:text-left text-gray-500 dark:text-gray-400">
                                             &copy; {new Date().getFullYear()}{' '}
                                             <Link href="https://zedsoftworks.dev">
                                                 Zed Softworks LLC
                                             </Link>
                                             . All rights reserved.
                                         </p>
-                                        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+                                        <nav className="flex gap-4 sm:gap-6 justify-center">
                                             <Button variant={'link'} asChild>
                                                 <Link href={'/terms'}>
                                                     Terms of Service
@@ -112,6 +113,7 @@ export default function RootLayout({
                                             <Button variant={'link'} asChild>
                                                 <Link href={'/privacy'}>Privacy</Link>
                                             </Button>
+                                            <ModeToggle />
                                         </nav>
                                     </div>
                                 </footer>
@@ -137,7 +139,7 @@ async function Navbar() {
                         Quick<span className="font-normal">pull</span>
                     </h1>
                 </Link>
-                <NavigationMenu className="flex items-center gap-5">
+                <NavigationMenu className="hidden sm:flex items-center gap-5">
                     <SignedIn>
                         <NavigationMenuList className="space-x-5">
                             <NavigationMenuItem>
@@ -149,8 +151,12 @@ async function Navbar() {
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
-                            <PremiumButton user={user} />
-                            <AccountMenu user={user} />
+                            <NavigationMenuItem>
+                                <PremiumButton user={user} variant="nav" />
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <AccountMenu user={user} />
+                            </NavigationMenuItem>
                         </NavigationMenuList>
                     </SignedIn>
                     <SignedOut>
@@ -160,16 +166,53 @@ async function Navbar() {
                             </Link>
                         </Button>
                     </SignedOut>
-                    <NavigationMenuItem asChild>
-                        <ModeToggle />
-                    </NavigationMenuItem>
                 </NavigationMenu>
+                <Sheet>
+                    <SheetTrigger asChild className="sm:hidden">
+                        <Button variant="ghost" size="icon">
+                            <Menu className="h-6 w-6" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right">
+                        <div className="flex flex-col gap-4">
+                            <SignedIn>
+                                <SheetClose asChild>
+                                    <Link
+                                        href="/upload"
+                                        className="flex items-center gap-2"
+                                    >
+                                        Upload
+                                    </Link>
+                                </SheetClose>
+                                <PremiumButton user={user} variant="sheet" />
+                                <SheetClose asChild>
+                                    <Link href={'/api/payments/portal'}>
+                                        Manage Subscription
+                                    </Link>
+                                </SheetClose>
+                                <SheetClose asChild>
+                                    <Link href={'/u/account'}>Account Settings</Link>
+                                </SheetClose>
+                                <Button asChild>
+                                    <SignOutButton />
+                                </Button>
+                            </SignedIn>
+                            <SignedOut>
+                                <SheetClose asChild>
+                                    <Link prefetch={true} href={'/u/login'}>
+                                        Login
+                                    </Link>
+                                </SheetClose>
+                            </SignedOut>
+                        </div>
+                    </SheetContent>
+                </Sheet>
             </div>
         </header>
     )
 }
 
-async function PremiumButton(props: { user: User | null }) {
+async function PremiumButton(props: { user: User | null; variant?: 'nav' | 'sheet' }) {
     if (!props.user) return null
 
     const db_user = await get_user_by_id_cache(props.user.id)
@@ -178,41 +221,45 @@ async function PremiumButton(props: { user: User | null }) {
         return null
     }
 
-    return (
-        <NavigationMenuItem>
+    if (props.variant === 'nav') {
+        return (
             <Link href={'/api/payments/checkout'} legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Go Premium
                 </NavigationMenuLink>
             </Link>
-        </NavigationMenuItem>
+        )
+    }
+
+    return (
+        <Link href={'/api/payments/checkout'} className="flex items-center gap-2">
+            Go Premium
+        </Link>
     )
 }
 
 function AccountMenu(props: { user: User | null }) {
     return (
-        <NavigationMenuItem>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Avatar>
-                        <AvatarFallback>
-                            <UserIcon />
-                        </AvatarFallback>
-                        <AvatarImage src={props.user?.imageUrl} />
-                    </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuItem asChild>
-                        <Link href={'/api/payments/portal'}>Manage Subscription</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                        <Link href={'/u/account'}>Account Settings</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="w-full">
-                        <SignOutButton />
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </NavigationMenuItem>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Avatar>
+                    <AvatarFallback>
+                        <UserIcon />
+                    </AvatarFallback>
+                    <AvatarImage src={props.user?.imageUrl} />
+                </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                    <Link href={'/api/payments/portal'}>Manage Subscription</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href={'/u/account'}>Account Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="w-full">
+                    <SignOutButton />
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     )
 }

@@ -241,15 +241,15 @@ async function PremiumButton(props: { user: User | null; variant?: 'nav' | 'shee
 function AccountMenu(props: { user: User | null }) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild aria-label="Open Account Menu">
                 <Avatar>
                     <AvatarFallback>
                         <UserIcon />
                     </AvatarFallback>
-                    <AvatarImage src={props.user?.imageUrl} />
+                    <AvatarImage src={props.user?.imageUrl} alt={'User Avatar'} />
                 </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end" sideOffset={8}>
                 <DropdownMenuItem asChild>
                     <Link href={'/api/payments/portal'}>Manage Subscription</Link>
                 </DropdownMenuItem>

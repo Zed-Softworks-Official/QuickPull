@@ -43,7 +43,7 @@ export function CollectionForm(props: { account_type: AccountType }) {
     const router = useRouter()
     const mutation = api.collections.set_collection.useMutation({
         onSuccess: () => {
-            return router.replace('/')
+            router.replace('/')
         },
     })
 

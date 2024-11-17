@@ -130,7 +130,7 @@ async function Navbar() {
 
     return (
         <header className="border-b mb-10 sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
-            <div className="container mx-auto flex items-center justify-between py-5">
+            <div className="container mx-auto flex items-center justify-between py-5 px-5 sm:px-0">
                 <Link href="/" className="flex flex-row gap-2 items-center">
                     <Zap className="w-6 h-6 text-blue-600" />
                     <h1 className="text-2xl font-bold">

@@ -1,14 +1,11 @@
 import { z } from 'zod'
 import { createId } from '@paralleldrive/cuid2'
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { eq } from 'drizzle-orm'
+import { UTApi } from 'uploadthing/server'
 
-import { protectedProcedure, createTRPCRouter, publicProcedure } from '~/server/api/trpc'
+import { protectedProcedure, createTRPCRouter } from '~/server/api/trpc'
 import { db } from '~/server/db'
 import { collections } from '~/server/db/schema'
-
-import { get_collection_by_id_cache, get_collections_cache } from '~/server/db/query'
-import { UTApi } from 'uploadthing/server'
 
 export const collectionsRouter = createTRPCRouter({
     set_collection: protectedProcedure
@@ -38,29 +35,22 @@ export const collectionsRouter = createTRPCRouter({
             } catch (e) {
                 console.error(e)
             }
-
-            revalidateTag('collections')
-            revalidatePath('/')
         }),
 
-    get_collections: protectedProcedure.query(async ({ ctx }) => {
-        const collections = await get_collections_cache(ctx.user.id)
+    get_collection: protectedProcedure.query(async ({ ctx }) => {
+        console.log('Fetching collections')
 
-        return collections
+        return await ctx.db.query.collections.findMany({
+            where: eq(collections.user_id, ctx.user.id),
+        })
     }),
-
-    get_collection_by_id: publicProcedure
-        .input(z.object({ collection_id: z.string() }))
-        .query(async ({ input }) => {
-            const collection = await get_collection_by_id_cache(input.collection_id)
-
-            return collection
-        }),
 
     delete_collection: protectedProcedure
         .input(z.object({ collection_id: z.string() }))
         .mutation(async ({ input, ctx }) => {
-            const collection = await get_collection_by_id_cache(input.collection_id)
+            const collection = await db.query.collections.findFirst({
+                where: eq(collections.id, input.collection_id),
+            })
 
             if (collection?.user_id !== ctx.user.id) {
                 return false
@@ -74,9 +64,6 @@ export const collectionsRouter = createTRPCRouter({
                 .where(eq(collections.id, input.collection_id))
 
             await Promise.all([ut_deletion, db_deletion])
-
-            revalidateTag('collections')
-            revalidatePath('/')
 
             return true
         }),

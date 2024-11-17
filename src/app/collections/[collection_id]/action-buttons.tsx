@@ -101,7 +101,7 @@ export function KebabMenu(props: { collection: InferSelectModel<typeof collectio
                 toast.success('Collection deleted!', {
                     id: toastId,
                 })
-                router.push('/')
+                router.replace('/')
             } else {
                 toast.error('Failed to delete collection!', {
                     id: toastId,

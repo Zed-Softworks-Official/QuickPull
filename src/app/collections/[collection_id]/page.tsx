@@ -1,17 +1,15 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-
-import { api } from '~/trpc/server'
-import { DownloadButton, KebabMenu } from './action-buttons'
 import { currentUser } from '@clerk/nextjs/server'
+
+import { DownloadButton, KebabMenu } from './action-buttons'
+import { get_collection_by_id } from '~/server/db/query'
 
 export async function generateMetadata(props: {
     params: Promise<{ collection_id: string }>
 }) {
     const params = await props.params
-    const collection = await api.collections.get_collection_by_id({
-        collection_id: params.collection_id,
-    })
+    const collection = await get_collection_by_id(params.collection_id)
 
     if (!collection) {
         return {}
@@ -39,9 +37,7 @@ export default async function CollectionPage(props: {
     const user = await currentUser()
 
     const params = await props.params
-    const collection = await api.collections.get_collection_by_id({
-        collection_id: params.collection_id,
-    })
+    const collection = await get_collection_by_id(params.collection_id)
 
     if (!collection) {
         return notFound()

@@ -1,78 +1,21 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '~/components/ui/card'
-import { api, HydrateClient } from '~/trpc/server'
-import { Download, ImageIcon, Plus } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+import { Download, ImageIcon } from 'lucide-react'
 import { Button } from '~/components/ui/button'
+import { DisplayCollections } from '~/components/display-collections'
 
 export default function Home() {
     return (
-        <HydrateClient>
+        <>
             <SignedIn>
                 <DisplayCollections />
             </SignedIn>
             <SignedOut>
                 <DisplayLanding />
             </SignedOut>
-        </HydrateClient>
-    )
-}
-
-async function DisplayCollections() {
-    const collections = await api.collections.get_collections()
-
-    if (collections.length === 0) {
-        return (
-            <div className="container mx-auto flex flex-col gap-5 items-center justify-center w-full ">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl text-center">
-                    No collections found
-                </h1>
-                <Button asChild>
-                    <Link href="/upload">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Create a collection
-                    </Link>
-                </Button>
-            </div>
-        )
-    }
-
-    return (
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 container mx-auto">
-            {collections.map((collection) => (
-                <Link
-                    prefetch={true}
-                    href={`/collections/${collection.id}`}
-                    key={collection.id}
-                >
-                    <Card className="overflow-hidden">
-                        <CardHeader>
-                            <CardTitle>{collection.name}</CardTitle>
-                            <CardDescription>{collection.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="relative aspect-[3/2] overflow-hidden rounded-md">
-                                <Image
-                                    src={collection.items[0]?.url ?? ''}
-                                    alt={`Cover image for ${collection.name}`}
-                                    className="object-cover w-full transition-transform hover:scale-105"
-                                    width={500}
-                                    height={500}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
-            ))}
-        </div>
+        </>
     )
 }
 

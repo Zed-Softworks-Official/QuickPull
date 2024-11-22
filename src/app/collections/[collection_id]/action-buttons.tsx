@@ -37,43 +37,83 @@ export function DownloadButton(props: {
     const handleDownload = async () => {
         setIsDownloading(true)
         const toastId = toast.loading('Preparing download...')
-        const zip = new JSZip()
 
         try {
-            // Download each image and add to zip
-            for (const item of props.collection.items) {
-                try {
-                    const response = await fetch(item.url)
-                    const blob = await response.blob()
+            // Download each image individually on mobile
+            if ('share' in navigator && /mobile/i.test(navigator.userAgent)) {
+                for (const item of props.collection.items) {
+                    try {
+                        const response = await fetch(item.url)
+                        const blob = await response.blob()
+                        const file = new File([blob], item.filename, { type: blob.type })
 
-                    zip.file(item.filename, blob)
-                } catch (err) {
-                    console.error(
-                        `Failed to download ${item.url}:`,
-                        err instanceof Error ? err.message : String(err)
-                    )
-                    toast.error(`Failed to download ${item.filename}`, { id: toastId })
-                    setIsDownloading(false)
-                    return
+                        // Try to use Web Share API
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: item.filename,
+                            })
+                        } catch (shareErr) {
+                            console.error('Failed to share image:', shareErr)
+
+                            // Fallback to downloading directly
+                            const downloadUrl = URL.createObjectURL(blob)
+                            const link = document.createElement('a')
+                            link.href = downloadUrl
+                            link.download = item.filename
+                            link.click()
+                            URL.revokeObjectURL(downloadUrl)
+                        }
+                    } catch (err) {
+                        console.error(`Failed to download ${item.url}:`, err)
+                        toast.error(`Failed to download ${item.filename}`, {
+                            id: toastId,
+                        })
+                        return
+                    }
                 }
+                toast.success('Images ready to save!', { id: toastId })
+            } else {
+                // Original zip download logic for desktop
+                const zip = new JSZip()
+
+                // Download each image and add to zip
+                for (const item of props.collection.items) {
+                    try {
+                        const response = await fetch(item.url)
+                        const blob = await response.blob()
+
+                        zip.file(item.filename, blob)
+                    } catch (err) {
+                        console.error(
+                            `Failed to download ${item.url}:`,
+                            err instanceof Error ? err.message : String(err)
+                        )
+                        toast.error(`Failed to download ${item.filename}`, {
+                            id: toastId,
+                        })
+                        setIsDownloading(false)
+                        return
+                    }
+                }
+
+                // Generate and download zip file
+                const content = await zip.generateAsync({ type: 'blob' })
+                const downloadUrl = URL.createObjectURL(content)
+
+                const link = document.createElement('a')
+                link.href = downloadUrl
+                link.download = `${props.collection.name} from Quickpull.zip`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                URL.revokeObjectURL(downloadUrl)
+
+                toast.success('Download complete!', { id: toastId })
             }
-
-            // Generate and download zip file
-            const content = await zip.generateAsync({ type: 'blob' })
-            const downloadUrl = URL.createObjectURL(content)
-
-            const link = document.createElement('a')
-            link.href = downloadUrl
-            link.download = `${props.collection.name} from Quickpull.zip`
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-            URL.revokeObjectURL(downloadUrl)
-
-            toast.success('Download complete!', { id: toastId })
         } catch (err) {
-            console.error('Failed to create zip file', err)
-            toast.error('Failed to create zip file', { id: toastId })
+            console.error('Failed to process downloads', err)
+            toast.error('Failed to process downloads', { id: toastId })
         } finally {
             setIsDownloading(false)
         }

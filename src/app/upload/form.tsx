@@ -58,7 +58,7 @@ export function CollectionForm(props: { account_type: AccountType }) {
                 id: toastId.current,
             })
 
-            await utils.collections.get_collection.invalidate()
+            await utils.collections.get_collections.invalidate()
 
             router.replace('/')
         },

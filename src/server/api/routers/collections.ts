@@ -37,7 +37,15 @@ export const collectionsRouter = createTRPCRouter({
             }
         }),
 
-    get_collection: protectedProcedure.query(async ({ ctx }) => {
+    get_collection_by_id: protectedProcedure
+        .input(z.object({ collection_id: z.string() }))
+        .query(async ({ input, ctx }) => {
+            return await ctx.db.query.collections.findFirst({
+                where: eq(collections.id, input.collection_id),
+            })
+        }),
+
+    get_collections: protectedProcedure.query(async ({ ctx }) => {
         return await ctx.db.query.collections.findMany({
             where: eq(collections.user_id, ctx.user.id),
         })

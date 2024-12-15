@@ -17,7 +17,7 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { api } from '~/trpc/react'
 
 export function DisplayCollections() {
-    const { data, isLoading } = api.collections.get_collection.useQuery()
+    const { data, isLoading } = api.collections.get_collections.useQuery()
 
     if (isLoading) {
         return (

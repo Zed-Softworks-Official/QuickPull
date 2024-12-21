@@ -1,7 +1,6 @@
 {
-  "extends": "@quickpull/tsconfig/react-library.json",
+  "extends": "@quickpull/tsconfig/base.json",
   "compilerOptions": {
-    //"outDir": "dist"
     "baseUrl": ".",
     "paths": {
       "@quickpull/ui/*": ["./src/*"]

@@ -13,6 +13,11 @@ const config = {
   tailwindConfig: fileURLToPath(
     new URL("../../tooling/tailwind/web.ts", import.meta.url),
   ),
+  semi: false,
+  singleQuote: true,
+  trailingComma: "es5",
+  printWidth: 90,
+  tabWidth: 4,
   tailwindFunctions: ["cn", "cva"],
   importOrder: [
     "<TYPES>",
@@ -21,8 +26,8 @@ const config = {
     "^(expo(.*)$)|^(expo$)",
     "<THIRD_PARTY_MODULES>",
     "",
-    "<TYPES>^@acme",
-    "^@acme/(.*)$",
+    "<TYPES>^@quickpull",
+    "^@quickpull/(.*)$",
     "",
     "<TYPES>^[.|..|~]",
     "^~/",

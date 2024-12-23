@@ -1,0 +1,29 @@
+{
+  "name": "@quickpull/payments",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --max-warnings 0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./customer": "./src/customer.ts",
+    "./portal": "./src/portal.ts",
+    "./session": "./src/session.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.38.2",
+    "stripe": "^17.3.1"
+  },
+  "devDependencies": {
+    "@quickpull/db": "workspace:",
+    "@quickpull/eslint-config": "workspace:",
+    "@quickpull/prettier-config": "workspace:",
+    "@quickpull/tsconfig": "workspace:",
+    "@turbo/gen": "^2.2.3",
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3"
+  },
+  "prettier": "@quickpull/prettier-config"
+}

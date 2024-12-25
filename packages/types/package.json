@@ -1,0 +1,12 @@
+{
+    "name": "@quickpull/types",
+    "version": "0.0.1",
+    "main": "./src/core.d.ts",
+    "types": "./src/core.d.ts",
+    "exports": {
+        ".": "./src/core.d.ts"
+    },
+    "devDependencies": {
+        "@quickpull/tsconfig": "workspace:*"
+    }
+}

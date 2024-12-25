@@ -2,16 +2,27 @@
   "name": "quickpull",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "build": "turbo run build",
+    "clean": "git clean -xdf node_modules",
+    "clean:workspaces": "turbo run clean",
+    "db:push": "turbo -F @quickpull/db push",
+    "db:studio": "turbo -F @quickpull/db studio",
+    "dev": "turbo watch dev --continue",
+    "dev:next": "turbo watch dev -F @quickpull/nextjs...",
+    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
+    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
+    "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
+    "lint:ws": "pnpm dlx sherif@latest",
+    "postinstall": "pnpm lint:ws",
+    "typecheck": "turbo run typecheck",
+    "ui-add": "turbo run ui-add"
   },
   "devDependencies": {
     "@quickpull/prettier-config": "workspace:",
-    "turbo": "^2.3.3",
     "@turbo/gen": "^2.3.1",
     "prettier": "catalog:",
+    "turbo": "^2.3.3",
     "typescript": "catalog:"
   },
   "prettier": "@quickpull/prettier-config",

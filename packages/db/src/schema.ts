@@ -11,11 +11,7 @@ import {
     varchar,
 } from 'drizzle-orm/pg-core'
 
-interface CollectionItem {
-    url: string
-    ut_key: string
-    filename: string
-}
+import type { CollectionItem } from '@quickpull/types'
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same

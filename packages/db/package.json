@@ -39,6 +39,7 @@
     "@quickpull/eslint-config": "workspace:*",
     "@quickpull/prettier-config": "workspace:*",
     "@quickpull/tsconfig": "workspace:*",
+    "@quickpull/types": "workspace:*",
     "dotenv-cli": "^7.4.4",
     "drizzle-kit": "^0.28.1",
     "eslint": "catalog:",

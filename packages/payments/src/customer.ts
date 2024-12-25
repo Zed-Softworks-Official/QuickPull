@@ -1,6 +1,6 @@
 import { clerkClient } from '@clerk/nextjs/server'
-import { eq } from 'drizzle-orm'
 
+import { eq } from '@quickpull/db'
 import { db } from '@quickpull/db/client'
 import { users } from '@quickpull/db/schema'
 

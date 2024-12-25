@@ -1,4 +1,11 @@
-import { config } from "@workspace/eslint-config/react-internal"
+import baseConfig from '@quickpull/eslint-config/base'
+import reactConfig from '@quickpull/eslint-config/react'
 
-/** @type {import("eslint").Linter.Config} */
-export default config
+/** @type {import('typescript-eslint').Config} */
+export default [
+    {
+        ignores: ['dist/**'],
+    },
+    ...baseConfig,
+    ...reactConfig,
+]

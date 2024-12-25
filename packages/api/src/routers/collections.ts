@@ -62,7 +62,7 @@ export const collectionsRouter = createTRPCRouter({
                 return false
             }
             const utapi = new UTApi()
-            const item_keys = collection?.items.map((item) => item.ut_key)
+            const item_keys = collection.items.map((item) => item.ut_key)
 
             const ut_deletion = utapi.deleteFiles(item_keys)
             const db_deletion = ctx.db

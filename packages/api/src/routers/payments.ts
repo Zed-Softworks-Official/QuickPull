@@ -36,7 +36,7 @@ export const paymentsRouter = createTRPCRouter({
             url: null,
         }
 
-        if (db_user?.account_type === 'premium') {
+        if (db_user.account_type === 'premium') {
             await ctx.redis.set(redis_key, result, {
                 ex: 3600,
             })

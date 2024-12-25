@@ -5,7 +5,7 @@ import { eq, InferSelectModel } from '@quickpull/db'
 import { users } from '@quickpull/db/schema'
 
 import { get_redis_key } from '../cache'
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
+import { createTRPCRouter, publicProcedure } from '../trpc'
 
 export const usersRouter = createTRPCRouter({
     get_user_by_id: publicProcedure.input(z.string()).query(async ({ ctx, input }) => {

@@ -63,10 +63,7 @@ export default tseslint.config(
                 2,
                 { checksVoidReturn: { attributes: false } },
             ],
-            '@typescript-eslint/consistent-type-imports': [
-                'warn',
-                { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
-            ],
+            '@typescript-eslint/consistent-type-imports': 'off',
             '@typescript-eslint/no-unnecessary-condition': [
                 'error',
                 {

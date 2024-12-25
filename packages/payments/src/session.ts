@@ -1,5 +1,5 @@
-import { InferSelectModel } from '@quickpull/db'
-import { users } from '@quickpull/db/schema'
+import type { InferSelectModel } from '@quickpull/db'
+import type { users } from '@quickpull/db/schema'
 
 import { create_stripe_customer } from './customer'
 import { stripe } from './index'
@@ -8,7 +8,7 @@ export async function create_checkout_session(
     user_id: string,
     user: InferSelectModel<typeof users>
 ) {
-    let customer_id = user?.customer_id
+    let customer_id = user.customer_id
 
     if (!customer_id) {
         const customer = await create_stripe_customer(user_id)

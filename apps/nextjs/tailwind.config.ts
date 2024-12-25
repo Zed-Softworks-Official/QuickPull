@@ -5,7 +5,7 @@ import baseConfig from '@quickpull/tailwind-config/web'
 
 export default withUt({
     darkMode: ['class'],
-    content: [...baseConfig.content, '../../packages/ui/src/*.{ts,tsx}'],
+    content: [...baseConfig.content, '../../packages/ui/src/**/*.{ts,tsx}'],
     presets: [baseConfig],
     theme: {
         extend: {

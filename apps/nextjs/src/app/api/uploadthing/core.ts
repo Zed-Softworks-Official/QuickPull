@@ -23,7 +23,7 @@ const f = createUploadthing({
 const auth_middleware = async (req: NextRequest, account_type: AccountType) => {
     const user = getAuth(req)
 
-    if (!user?.userId) {
+    if (!user.userId) {
         console.log('No User ID found in uploadthing middleware')
         throw new UploadThingError('Unauthorized')
     }
@@ -51,7 +51,7 @@ export const ourFileRouter = {
     standardUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 10 } })
         // Set permissions and file types for this FileRoute
         .middleware(({ req }) => auth_middleware(req, 'standard'))
-        .onUploadComplete(async ({ metadata, file }) => {
+        .onUploadComplete(({ metadata, file }) => {
             // This code RUNS ON YOUR SERVER after upload
             console.log('Upload complete for userId:', metadata.userId)
 

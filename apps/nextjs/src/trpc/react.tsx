@@ -1,15 +1,17 @@
+/* eslint-disable no-restricted-properties */
 'use client'
 
 import type { QueryClient } from '@tanstack/react-query'
+import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { useState } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { loggerLink, unstable_httpBatchStreamLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server'
 import SuperJSON from 'superjson'
 
-import { type AppRouter } from '@quickpull/api'
+import type { AppRouter } from '@quickpull/api'
 
+import { env } from '~/env'
 import { createQueryClient } from './query-client'
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined
@@ -46,7 +48,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             links: [
                 loggerLink({
                     enabled: (op) =>
-                        process.env.NODE_ENV === 'development' ||
+                        env.NODE_ENV === 'development' ||
                         (op.direction === 'down' && op.result instanceof Error),
                 }),
                 unstable_httpBatchStreamLink({

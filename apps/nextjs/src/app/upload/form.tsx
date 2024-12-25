@@ -1,11 +1,11 @@
 'use client'
 
+import type { ColumnDef } from '@tanstack/react-table'
 import type { Dispatch, SetStateAction } from 'react'
 import type { ExpandedRouteConfig } from 'uploadthing/types'
 import { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type ColumnDef } from '@tanstack/react-table'
 import { useDropzone } from '@uploadthing/react'
 import { CloudUpload, MoreVertical, Trash2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'

@@ -1,7 +1,7 @@
 import '~/styles/globals.css'
 
 import type { User } from '@clerk/nextjs/server'
-import { type Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ClerkProvider, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
@@ -220,7 +220,7 @@ async function PremiumButton(props: { user: User | null; variant?: 'nav' | 'shee
 
     const db_user = await api.users.get_user_by_id(props.user.id)
 
-    if (db_user?.account_type === 'premium') {
+    if (db_user.account_type === 'premium') {
         return null
     }
 

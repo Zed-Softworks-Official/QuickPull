@@ -8,7 +8,7 @@ import { create_checkout_session } from '@quickpull/payments/session'
 import { get_redis_key } from '../cache'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
-type SessionResponse = {
+export interface SessionResponse {
     url: string | null
 }
 

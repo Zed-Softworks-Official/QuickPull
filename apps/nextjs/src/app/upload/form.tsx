@@ -62,6 +62,11 @@ export function CollectionForm(props: { account_type: AccountType }) {
     const router = useRouter()
     const utils = api.useUtils()
     const createCollection = api.collections.set_collection.useMutation({
+        onError: (error) => {
+            toast.error(error.message, {
+                id: toastId.current,
+            })
+        },
         onSuccess: async () => {
             toast.success('Files uploaded successfully', {
                 id: toastId.current,

@@ -17,7 +17,9 @@ import { Skeleton } from '@quickpull/ui/components/skeleton'
 import { api } from '~/trpc/react'
 
 export function DisplayCollections() {
-    const { data, isLoading } = api.collections.get_collections.useQuery()
+    const { data, isLoading, error } = api.collections.get_collections.useQuery()
+
+    console.log(error)
 
     if (isLoading) {
         return (

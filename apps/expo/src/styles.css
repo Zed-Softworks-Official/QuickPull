@@ -39,8 +39,3 @@
         @apply bg-background text-foreground;
     }
 }
-
-.cl-internal-4x6jej {
-    background: var(--background) !important;
-    color: var(--foreground) !important;
-}

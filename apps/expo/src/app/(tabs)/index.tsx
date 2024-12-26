@@ -1,18 +1,9 @@
-import { Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Stack } from 'expo-router'
+import { SafeAreaView, Text, View } from 'react-native'
 
 export default function Index() {
     return (
-        <SafeAreaView className="bg-background">
-            {/* Changes page title visible on the header */}
-            <Stack.Screen
-                options={{
-                    title: 'Collections',
-                    headerTintColor: '#fff',
-                }}
-            />
-            <View className="h-full w-full bg-background p-4">
+        <SafeAreaView className="flex-1 bg-background p-5">
+            <View className="flex-1 p-5">
                 <Text className="pb-2 text-5xl font-bold text-foreground">
                     Hello, World!
                 </Text>

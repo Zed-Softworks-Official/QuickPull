@@ -4,7 +4,7 @@ import { Tabs } from 'expo-router'
 
 import { HapticTab } from '~/components/haptic-tab'
 import { IconSymbol } from '~/components/ui/icon-symbol'
-import BlurTabBarBackground from '~/components/ui/tab-bar-background-ios'
+import TabBarBackground from '~/components/ui/tab-bar-background'
 
 export default function TabLayout() {
     return (
@@ -12,13 +12,17 @@ export default function TabLayout() {
             screenOptions={{
                 headerShown: false,
                 tabBarButton: HapticTab,
-                tabBarBackground: BlurTabBarBackground,
+                tabBarBackground: TabBarBackground,
                 tabBarStyle: Platform.select({
                     ios: {
                         // Use a transparent background on iOS to show the blur effect
                         position: 'absolute',
+                        backgroundColor: '#0e0e11',
+                        borderTopColor: '#09090B',
                     },
-                    default: {},
+                    default: {
+                        backgroundColor: '#09090B',
+                    },
                 }),
             }}
         >
@@ -27,7 +31,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Home',
                     tabBarIcon: ({ color }) => (
-                        <IconSymbol size={28} name="house.fill" color={color} />
+                        <IconSymbol size={28} name="square.stack.fill" color={color} />
                     ),
                 }}
             />
@@ -36,7 +40,16 @@ export default function TabLayout() {
                 options={{
                     title: 'Upload',
                     tabBarIcon: ({ color }) => (
-                        <IconSymbol size={28} name="paperplane.fill" color={color} />
+                        <IconSymbol size={28} name="cloud.fill" color={color} />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="account"
+                options={{
+                    title: 'Account',
+                    tabBarIcon: ({ color }) => (
+                        <IconSymbol size={28} name="person.fill" color={color} />
                     ),
                 }}
             />

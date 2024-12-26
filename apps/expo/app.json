@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "quickpull",
+    "slug": "quickpull",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "dev.zedsoftworks.quickpull",
+      "supportsTablet": true,
+      "backgroundColor": "#09090B"
+    },
+    "android": {
+      "package": "dev.zedsoftworks.quickpull",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#09090B"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#09090B"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    }
+  }
+}

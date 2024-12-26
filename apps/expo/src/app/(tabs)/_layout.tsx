@@ -10,7 +10,11 @@ export default function TabLayout() {
     return (
         <Tabs
             screenOptions={{
-                headerShown: false,
+                headerShown: true,
+                headerStyle: {
+                    backgroundColor: '#0e0e11',
+                },
+                headerTintColor: '#fff',
                 tabBarButton: HapticTab,
                 tabBarBackground: TabBarBackground,
                 tabBarStyle: Platform.select({
@@ -29,7 +33,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Home',
+                    title: 'Collections',
                     tabBarIcon: ({ color }) => (
                         <IconSymbol size={28} name="square.stack.fill" color={color} />
                     ),

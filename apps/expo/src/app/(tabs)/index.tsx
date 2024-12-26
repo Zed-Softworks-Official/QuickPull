@@ -2,10 +2,10 @@ import { SafeAreaView, Text, View } from 'react-native'
 
 export default function Index() {
     return (
-        <SafeAreaView className="flex-1 bg-background p-5">
-            <View className="flex-1 p-5">
-                <Text className="pb-2 text-5xl font-bold text-foreground">
-                    Hello, World!
+        <SafeAreaView className="flex-1 bg-background">
+            <View className="flex-1 px-10 pt-5">
+                <Text className="pb-2 text-2xl font-bold text-foreground">
+                    Placeholder
                 </Text>
             </View>
         </SafeAreaView>

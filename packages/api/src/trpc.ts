@@ -6,7 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { currentUser } from '@clerk/nextjs/server'
+import { clerkClient, getAuth } from '@clerk/nextjs/server'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
@@ -27,7 +27,10 @@ import { redis } from './cache'
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: { headers: Headers }) => {
+export const createTRPCContext = (opts: {
+    headers: Headers
+    auth: ReturnType<typeof getAuth>
+}) => {
     return {
         db,
         redis,
@@ -111,14 +114,15 @@ export const publicProcedure = t.procedure.use(timingMiddleware)
 export const protectedProcedure = t.procedure
     .use(timingMiddleware)
     .use(async ({ ctx, next }) => {
-        const user = await currentUser()
-
-        if (!user) {
+        if (!ctx.auth.userId) {
             throw new TRPCError({
                 code: 'UNAUTHORIZED',
-                message: 'User not found',
+                message: 'User not authenticated',
             })
         }
+
+        const clerk_client = await clerkClient()
+        const user = await clerk_client.users.getUser(ctx.auth.userId)
 
         return next({ ctx: { ...ctx, user } })
     })

@@ -1,22 +1,17 @@
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
-import { useUser } from '@clerk/clerk-expo'
 
 import type { RouterOutputs } from '~/utils/api'
 import { api } from '~/utils/api'
 
 export default function Index() {
-    const { user, isLoaded } = useUser()
-
-    if (!isLoaded || !user) {
-        return <Text>Loading...</Text>
-    }
-
-    const { data, isLoading } = api.collections.get_collections_by_user_id.useQuery(
-        user.id
-    )
+    const { data, isLoading } = api.collections.get_collections.useQuery()
 
     if (isLoading) {
-        return <Text>Loading...</Text>
+        return (
+            <SafeAreaView className="flex-1 bg-background">
+                <Text className="text-foreground">Loading...</Text>
+            </SafeAreaView>
+        )
     }
 
     return (

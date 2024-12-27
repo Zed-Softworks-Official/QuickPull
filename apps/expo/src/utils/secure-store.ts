@@ -11,7 +11,7 @@ const createTokenCache = (): TokenCache => {
     return {
         getToken: (key: string) => {
             try {
-                const item = SecureStore.getItemAsync(key) as unknown as string | null
+                const item = SecureStore.getItem(key) as unknown as string | null
 
                 if (item) {
                     console.log(`${key} was used 🔐 \n`)
@@ -28,7 +28,9 @@ const createTokenCache = (): TokenCache => {
         },
         getClerkToken: async (key: string) => {
             try {
-                const item = SecureStore.getItemAsync(key) as unknown as string | null
+                const item = (await SecureStore.getItemAsync(key)) as unknown as
+                    | string
+                    | null
 
                 if (item) {
                     console.log(`${key} was used 🔐 \n`)
@@ -47,8 +49,8 @@ const createTokenCache = (): TokenCache => {
         deleteToken: async (key: string) => {
             return await SecureStore.deleteItemAsync(key)
         },
-        saveToken: (key: string, token: string) => {
-            return SecureStore.setItemAsync(key, token)
+        saveToken: async (key: string, token: string) => {
+            return await SecureStore.setItemAsync(key, token)
         },
     }
 }

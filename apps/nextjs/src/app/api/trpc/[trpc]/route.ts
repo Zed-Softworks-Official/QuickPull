@@ -1,4 +1,5 @@
-import type { NextRequest } from 'next/server'
+import { NextRequest } from 'next/server'
+import { getAuth } from '@clerk/nextjs/server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
 import { appRouter, createTRPCContext } from '@quickpull/api'
@@ -10,8 +11,11 @@ import { env } from '~/env'
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = (req: NextRequest) => {
+    const session = getAuth(req)
+
     return createTRPCContext({
         headers: req.headers,
+        auth: session,
     })
 }
 

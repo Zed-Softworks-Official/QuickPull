@@ -1,12 +1,19 @@
 import React from 'react'
 import { Platform } from 'react-native'
-import { Tabs } from 'expo-router'
+import { Redirect, Tabs } from 'expo-router'
+import { useAuth } from '@clerk/clerk-expo'
 
 import { HapticTab } from '~/components/haptic-tab'
 import { IconSymbol } from '~/components/ui/icon-symbol'
 import TabBarBackground from '~/components/ui/tab-bar-background'
 
 export default function TabLayout() {
+    const { isSignedIn } = useAuth()
+
+    if (!isSignedIn) {
+        return <Redirect href={'/sign-in'} />
+    }
+
     return (
         <Tabs
             screenOptions={{

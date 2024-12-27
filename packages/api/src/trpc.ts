@@ -114,7 +114,10 @@ export const protectedProcedure = t.procedure
         const user = await currentUser()
 
         if (!user) {
-            throw new TRPCError({ code: 'UNAUTHORIZED' })
+            throw new TRPCError({
+                code: 'UNAUTHORIZED',
+                message: 'User not found',
+            })
         }
 
         return next({ ctx: { ...ctx, user } })

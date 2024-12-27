@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { eq } from '@quickpull/db'
 import { collections } from '@quickpull/db/schema'
 
-import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 
 export const collectionsRouter = createTRPCRouter({
     set_collection: protectedProcedure
@@ -50,6 +50,14 @@ export const collectionsRouter = createTRPCRouter({
             where: eq(collections.user_id, ctx.user.id),
         })
     }),
+
+    get_collections_by_user_id: publicProcedure
+        .input(z.string())
+        .query(async ({ ctx, input }) => {
+            return await ctx.db.query.collections.findMany({
+                where: eq(collections.user_id, input),
+            })
+        }),
 
     delete_collection: protectedProcedure
         .input(z.object({ collection_id: z.string() }))

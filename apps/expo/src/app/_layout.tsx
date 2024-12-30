@@ -1,8 +1,7 @@
 import '@bacons/text-decoder/install'
 
-import { View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { Slot, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { ClerkLoaded, ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo'
 
@@ -27,7 +26,7 @@ export default function RootLayout() {
             >
                 <ClerkLoaded>
                     <TRPCProvider>
-                        <Slot />
+                        <Layout />
                     </TRPCProvider>
                 </ClerkLoaded>
             </ClerkProvider>
@@ -37,35 +36,37 @@ export default function RootLayout() {
 
 export function Layout() {
     return (
-        <View className="flex-1 bg-background">
-            <Stack
-                screenOptions={{
-                    headerShown: false,
-                    headerStyle: {
-                        backgroundColor: '#09090B',
-                    },
-                    contentStyle: {
-                        backgroundColor: '#09090B',
-                    },
-                }}
-            >
-                <SignedIn>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="+not-found" />
-                </SignedIn>
-                <SignedOut>
-                    <Stack.Screen
-                        name="sign-in"
-                        options={{
-                            headerShown: false,
-                            presentation: 'modal',
-                            animation: 'slide_from_bottom',
-                        }}
-                    />
-                </SignedOut>
-            </Stack>
-
+        <Stack
+            screenOptions={{
+                headerShown: false,
+                contentStyle: {
+                    backgroundColor: '#09090B',
+                },
+            }}
+        >
+            <SignedIn>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                    name="(modals)/collections/[collection_id]"
+                    options={{
+                        headerShown: true,
+                        presentation: 'modal',
+                        animation: 'slide_from_bottom',
+                    }}
+                />
+            </SignedIn>
+            <SignedOut>
+                <Stack.Screen
+                    name="(modals)/sign-in"
+                    options={{
+                        headerShown: false,
+                        presentation: 'modal',
+                        animation: 'slide_from_bottom',
+                    }}
+                />
+            </SignedOut>
             <StatusBar style="light" />
-        </View>
+        </Stack>
     )
 }

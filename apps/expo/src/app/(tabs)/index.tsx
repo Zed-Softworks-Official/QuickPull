@@ -1,4 +1,13 @@
-import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
+import {
+    ActivityIndicator,
+    Image,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    View,
+} from 'react-native'
+import { useRouter } from 'expo-router'
 
 import type { RouterOutputs } from '~/utils/api'
 import { api } from '~/utils/api'
@@ -9,7 +18,9 @@ export default function Index() {
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 bg-background">
-                <Text className="text-foreground">Loading...</Text>
+                <View className="flex h-full w-full flex-1 flex-col items-center justify-center">
+                    <ActivityIndicator size="large" color="#ffffff" />
+                </View>
             </SafeAreaView>
         )
     }
@@ -28,8 +39,20 @@ export default function Index() {
 function CollectionCard(props: {
     collection: RouterOutputs['collections']['get_collections_by_user_id'][number]
 }) {
+    const router = useRouter()
+
     return (
-        <View className="flex h-full w-full flex-1 flex-col rounded-xl border-2 border-foreground/10 p-5">
+        <Pressable
+            className="flex h-full w-full flex-1 flex-col rounded-md border-2 border-foreground/10 p-5"
+            onPress={() => {
+                router.push({
+                    pathname: '/(modals)/collections/[collection_id]',
+                    params: {
+                        collection_id: props.collection.id,
+                    },
+                })
+            }}
+        >
             <Text className="text-xl font-bold text-foreground">
                 {props.collection.name}
             </Text>
@@ -41,6 +64,6 @@ function CollectionCard(props: {
                 className="h-48 w-full"
                 resizeMode="contain"
             />
-        </View>
+        </Pressable>
     )
 }

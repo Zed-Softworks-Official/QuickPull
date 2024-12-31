@@ -37,6 +37,7 @@ const config = {
         '@quickpull/types',
         '@quickpull/ui',
         '@quickpull/validators',
+        '@quickpull/uploadthing',
     ],
 
     // This is required to support PostHog trailing slash API requests

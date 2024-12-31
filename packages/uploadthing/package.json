@@ -1,0 +1,36 @@
+{
+  "name": "@quickpull/uploadthing",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@quickpull/types": "workspace:*",
+    "react": "catalog:react18",
+    "react-dom": "catalog:react18",
+    "uploadthing": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@quickpull/eslint-config": "workspace:*",
+    "@quickpull/prettier-config": "workspace:*",
+    "@quickpull/tsconfig": "workspace:*",
+    "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@quickpull/prettier-config"
+}

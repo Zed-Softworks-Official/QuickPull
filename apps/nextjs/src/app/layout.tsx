@@ -33,13 +33,13 @@ import {
 } from '@quickpull/ui/components/sheet'
 import { Toaster } from '@quickpull/ui/components/sonner'
 
-import { ourFileRouter } from '~/app/api/uploadthing/core'
 import { ModeToggle } from '~/components/mode-toggle'
 import { PosthogProvider } from '~/components/posthog-provider'
 import { ThemeProvider } from '~/components/theme-provider'
 import { env } from '~/env'
 import { TRPCReactProvider } from '~/trpc/react'
 import { api } from '~/trpc/server'
+import { quickPullFileRouter } from './api/uploadthing/core'
 
 export const metadata: Metadata = {
     title: 'QuickPull',
@@ -90,7 +90,7 @@ export default function RootLayout({
                                  * leaked to the client. The data passed to the client is the same
                                  * as if you were to fetch `/api/uploadthing` directly.
                                  */
-                                routerConfig={extractRouterConfig(ourFileRouter)}
+                                routerConfig={extractRouterConfig(quickPullFileRouter)}
                             />
 
                             <TRPCReactProvider>

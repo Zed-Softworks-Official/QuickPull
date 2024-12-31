@@ -53,13 +53,16 @@ export default function CollectionPage() {
 
             <ScrollView className="mx-auto flex h-full w-full flex-1 pt-20">
                 <Button title="Back" onPress={() => router.back()} />
-                <View className="flex h-full w-full flex-1 flex-col items-center justify-center gap-10">
+                <View className="flex h-full w-full flex-1 flex-col items-center justify-center gap-10 overflow-hidden rounded-md">
                     {collection?.items.map((item) => (
                         <Image
                             key={item.ut_key}
                             src={item.url}
-                            className="h-96 w-full rounded-md"
+                            className="h-96 w-full overflow-hidden rounded-md"
                             resizeMode="contain"
+                            style={{
+                                borderRadius: 6,
+                            }}
                         />
                     ))}
                 </View>

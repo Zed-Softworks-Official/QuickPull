@@ -6,7 +6,7 @@ import { AccountType } from '@quickpull/types'
 export type AuthMiddlewareFnc = (
     req: Request,
     account_type: AccountType
-) => { userId: string }
+) => Promise<{ userId: string }>
 
 const f = createUploadthing({
     errorFormatter: (err) => {

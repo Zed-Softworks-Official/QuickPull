@@ -2,6 +2,6 @@
 
 import { generateReactHelpers } from '@uploadthing/react'
 
-import type { OurFileRouter } from '~/app/api/uploadthing/core'
+import type { QuickpullFileRouter } from '@quickpull/uploadthing'
 
-export const { useUploadThing } = generateReactHelpers<OurFileRouter>()
+export const { useUploadThing } = generateReactHelpers<QuickpullFileRouter>()

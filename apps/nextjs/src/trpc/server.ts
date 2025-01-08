@@ -2,6 +2,7 @@ import 'server-only'
 
 import { cache } from 'react'
 import { headers } from 'next/headers'
+import { auth } from '@clerk/nextjs/server'
 import { createHydrationHelpers } from '@trpc/react-query/rsc'
 
 import type { AppRouter } from '@quickpull/api'
@@ -17,8 +18,11 @@ const createContext = cache(async () => {
     const heads = new Headers(await headers())
     heads.set('x-trpc-source', 'rsc')
 
+    const auth_data = await auth()
+
     return createTRPCContext({
         headers: heads,
+        auth: auth_data,
     })
 })
 

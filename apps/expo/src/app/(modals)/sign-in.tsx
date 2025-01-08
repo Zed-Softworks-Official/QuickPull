@@ -8,7 +8,6 @@ import { IconSymbol } from '~/components/ui/icon-symbol.ios'
 
 export default function SignInPage() {
     const { signIn, setActive, isLoaded } = useSignIn()
-
     const router = useRouter()
 
     if (!isLoaded) {

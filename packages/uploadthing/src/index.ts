@@ -6,7 +6,7 @@ import { AccountType } from '@quickpull/types'
 export type AuthMiddlewareFnc = (
     req: Request,
     account_type: AccountType
-) => Promise<{ userId: string }>
+) => { userId: string }
 
 const f = createUploadthing({
     errorFormatter: (err) => {
@@ -24,7 +24,7 @@ export const createFileRouter = (auth_middleware: AuthMiddlewareFnc) => {
         })
             .middleware(({ req }) => auth_middleware(req, 'standard'))
             .onUploadComplete(({ metadata, file }) => {
-                console.log('Upload complete')
+                console.log('Upload Complete')
 
                 console.log('file url', file.url)
 

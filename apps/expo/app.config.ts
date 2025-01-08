@@ -57,5 +57,6 @@ export default ({ config: defaultConfig }: ConfigContext): ExpoConfig => ({
     ],
     extra: {
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+        NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     },
 })

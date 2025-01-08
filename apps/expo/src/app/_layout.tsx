@@ -51,7 +51,7 @@ export function Layout() {
                     name="(modals)/collections/[collection_id]"
                     options={{
                         headerShown: true,
-                        presentation: 'modal',
+                        presentation: 'formSheet',
                         animation: 'slide_from_bottom',
                     }}
                 />
@@ -61,7 +61,7 @@ export function Layout() {
                     name="(modals)/sign-in"
                     options={{
                         headerShown: false,
-                        presentation: 'modal',
+                        presentation: 'formSheet',
                         animation: 'slide_from_bottom',
                     }}
                 />

@@ -27,7 +27,12 @@ export default function Index() {
 
     return (
         <SafeAreaView className="flex-1 bg-background">
-            <ScrollView className="flex h-full flex-1 flex-col gap-10 px-10 pt-5">
+            <ScrollView
+                className="flex h-full flex-1 flex-col gap-10 px-10 pt-5"
+                contentContainerStyle={{
+                    gap: 20,
+                }}
+            >
                 {data?.map((collection) => (
                     <CollectionCard key={collection.id} collection={collection} />
                 ))}

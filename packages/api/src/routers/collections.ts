@@ -49,7 +49,7 @@ export const collectionsRouter = createTRPCRouter({
             })
         }),
 
-    get_collection_by_id: protectedProcedure
+    get_collection_by_id: publicProcedure
         .input(z.object({ collection_id: z.string() }))
         .query(async ({ input, ctx }) => {
             return await ctx.db.query.collections.findFirst({
